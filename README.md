@@ -1,10 +1,10 @@
-Optimus id obfuscation
-======================
+Optimus id transformation
+=========================
 
 [![Latest Stable Version](http://img.shields.io/github/release/jenssegers/optimus.svg)](https://packagist.org/packages/jenssegers/optimus) [![Build Status](http://img.shields.io/travis/jenssegers/optimus.svg)](https://travis-ci.org/jenssegers/optimus) [![Coverage Status](http://img.shields.io/coveralls/jenssegers/optimus.svg)](https://coveralls.io/r/jenssegers/optimus?branch=master)
 
 
-With this library, you can obfuscate your internal id's to obfuscated integers based on Kunth's integer hash.
+With this library, you can transform your internal id's to obfuscated integers based on Kunth's integer hash.
 
 Installation
 ------------
