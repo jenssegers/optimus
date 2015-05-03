@@ -1,8 +1,8 @@
 {
     "name": "jenssegers/optimus",
-    "description": "",
+    "description": "Id obfuscation based on Kunth's integer hash method",
     "type": "library",
-    "keywords": [""],
+    "keywords": ["obfuscation", "ids", "optimus", "hashids", "id obfuscation"],
     "homepage": "https://github.com/jenssegers/php-optimus",
     "license": "MIT",
     "authors": [
