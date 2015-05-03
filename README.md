@@ -40,6 +40,8 @@ Using those numbers, you can start creating instances of `Optimus($prime, $inver
 new Optimus(1580030173, 59260789, 1163945558);
 ```
 
+**NOTE**: Make sure that you are using the same constructor values throughout your entire application!
+
 ## Encoding and decoding
 
 To encode id's, use the `encode` method:
