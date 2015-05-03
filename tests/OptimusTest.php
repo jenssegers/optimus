@@ -53,8 +53,6 @@ class OptimusTest extends PHPUnit_Framework_TestCase {
             $this->assertEquals($id, $decoded);
             $this->assertNotEquals($id, $encoded);
         }
-
-        echo $optimus->encode(20);
     }
 
 }
