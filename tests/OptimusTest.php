@@ -61,4 +61,13 @@ class OptimusTest extends PHPUnit_Framework_TestCase {
         $optimus->encode("foo");
     }
 
+    public function testDecodeBadStrings()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $optimus = new Optimus(1580030173, 59260789);
+
+        $optimus->decode("foo");
+    }
+
 }
