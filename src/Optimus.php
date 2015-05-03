@@ -1,5 +1,7 @@
 <?php namespace Jenssegers\Optimus;
 
+use InvalidArgumentException;
+
 class Optimus {
 
     /**
@@ -30,9 +32,7 @@ class Optimus {
     public function __construct($prime, $inverse, $xor = 0)
     {
         $this->prime = (int) $prime;
-
         $this->inverse = (int) $inverse;
-
         $this->xor = (int) $xor;
     }
 
@@ -44,6 +44,11 @@ class Optimus {
      */
     public function encode($value)
     {
+        if ( ! is_numeric($value))
+        {
+            throw new InvalidArgumentException('Argument should be an integer');
+        }
+
         return (((int) $value * $this->prime) & static::MAX_INT) ^ $this->xor;
     }
 
@@ -55,6 +60,11 @@ class Optimus {
      */
     public function decode($value)
     {
+        if ( ! is_numeric($value))
+        {
+            throw new InvalidArgumentException('Argument should be an integer');
+        }
+
         return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
     }
 
