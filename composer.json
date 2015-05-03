@@ -1,0 +1,28 @@
+{
+    "name": "jenssegers/optimus",
+    "description": "",
+    "type": "library",
+    "keywords": [""],
+    "homepage": "https://github.com/jenssegers/php-optimus",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jens Segers",
+            "homepage": "http://jenssegers.be"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.6",
+        "phpseclib/phpseclib": "~2.0@dev",
+        "symfony/console": "~2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jenssegers\\Optimus\\": "src"
+        }
+    },
+    "bin": ["optimus"]
+}
