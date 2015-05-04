@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+require '../vendor/autoload.php';
+
+use Jenssegers\Optimus\Commands\SparkCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('Optimus', '@package_version@');
+$application->add(new SparkCommand);
+$application->run();

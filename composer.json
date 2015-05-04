@@ -25,5 +25,5 @@
             "Jenssegers\\Optimus\\": "src"
         }
     },
-    "bin": ["optimus"]
+    "bin": ["optimus.phar"]
 }
