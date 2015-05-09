@@ -6,6 +6,10 @@ Optimus id transformation
 
 With this library, you can transform your internal id's to obfuscated integers based on Knuth's integer hash. It is similar to Hashids, but will generate integers instead of random strings. It is also super fast.
 
+<div style="text-align:center">
+<img src="http://jenssegers.be/uploads/images/optimus.png">
+</div>
+
 Installation
 ------------
 
