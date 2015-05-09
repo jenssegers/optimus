@@ -3,9 +3,7 @@
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Jenssegers\Optimus\Optimus;
 use phpseclib\Crypt\Random;
 use phpseclib\Math\BigInteger;
@@ -21,8 +19,7 @@ class SparkCommand extends Command
                'prime',
                InputArgument::REQUIRED,
                'Your prime number'
-            )
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -36,6 +33,7 @@ class SparkCommand extends Command
         if ( ! $inverse = $a->modInverse($b))
         {
             $output->writeln('<error>Invalid prime number</>');
+
             return;
         }
 

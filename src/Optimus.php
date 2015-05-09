@@ -25,9 +25,9 @@ class Optimus {
     private $xor;
 
     /**
-     * @param integer  $prime
-     * @param integer  $xor
-     * @param integer  $inverse
+     * @param integer $prime
+     * @param integer $xor
+     * @param integer $inverse
      */
     public function __construct($prime, $inverse, $xor = 0)
     {
@@ -39,7 +39,7 @@ class Optimus {
     /**
      * Encode an integer.
      *
-     * @param  integer  $value
+     * @param  integer $value
      * @return integer
      */
     public function encode($value)
@@ -55,7 +55,7 @@ class Optimus {
     /**
      * Decode an integer.
      *
-     * @param  integer  $value
+     * @param  integer $value
      * @return integer
      */
     public function decode($value)
