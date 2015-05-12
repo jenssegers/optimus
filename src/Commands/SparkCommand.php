@@ -28,7 +28,7 @@ class SparkCommand extends Command
 
         // Calculate the inverse.
         $a = new BigInteger($prime);
-        $b = new BigInteger(Optimus::MAX_INT + 1);
+        $b = new BigInteger(PHP_INT_MAX + 1);
 
         if ( ! $inverse = $a->modInverse($b))
         {
@@ -37,7 +37,7 @@ class SparkCommand extends Command
             return;
         }
 
-        $rand = hexdec(bin2hex(Random::string(4))) & Optimus::MAX_INT;
+        $rand = hexdec(bin2hex(Random::string(4))) & PHP_INT_MAX;
 
         $output->writeln('Prime: ' . $prime);
         $output->writeln('Inverse: ' . $inverse);
