@@ -7,11 +7,6 @@ class Optimus {
     /**
      * @var integer
      */
-    const MAX_INT = 2147483647;
-
-    /**
-     * @var integer
-     */
     private $prime;
 
     /**
@@ -49,7 +44,7 @@ class Optimus {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        return (((int) $value * $this->prime) & static::MAX_INT) ^ $this->xor;
+        return (((int) $value * $this->prime) & PHP_INT_MAX) ^ $this->xor;
     }
 
     /**
@@ -65,7 +60,7 @@ class Optimus {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
+        return (((int) $value ^ $this->xor) * $this->inverse) & PHP_INT_MAX;
     }
 
 }
