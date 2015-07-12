@@ -38,7 +38,7 @@ Inverse: 1885413229
 Random: 146808189
 ```
 
-If you prefer to choose your own prime number (from from [this list](http://primes.utm.edu/lists/small/millions/) for example), you can pass it to the command to calculate the remaining numbers:
+If you prefer to choose your own prime number (from [this list](http://primes.utm.edu/lists/small/millions/) for example), you can pass it to the command to calculate the remaining numbers:
 
 ```
 > php vendor/bin/optimus spark 1580030173
