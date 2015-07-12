@@ -5,29 +5,29 @@ use InvalidArgumentException;
 class Optimus {
 
     /**
-     * @var integer
+     * @var int
      */
     const MAX_INT = 2147483647;
 
     /**
-     * @var integer
+     * @var int
      */
     private $prime;
 
     /**
-     * @var integer
+     * @var int
      */
     private $inverse;
 
     /**
-     * @var integer
+     * @var int
      */
     private $xor;
 
     /**
-     * @param integer $prime
-     * @param integer $xor
-     * @param integer $inverse
+     * @param int $prime
+     * @param int $xor
+     * @param int $inverse
      */
     public function __construct($prime, $inverse, $xor = 0)
     {
@@ -39,8 +39,8 @@ class Optimus {
     /**
      * Encode an integer.
      *
-     * @param  integer $value
-     * @return integer
+     * @param  int $value
+     * @return int
      */
     public function encode($value)
     {
@@ -55,8 +55,8 @@ class Optimus {
     /**
      * Decode an integer.
      *
-     * @param  integer $value
-     * @return integer
+     * @param  int $value
+     * @return int
      */
     public function decode($value)
     {

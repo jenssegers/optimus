@@ -28,10 +28,20 @@ To get started you will need 3 things;
  - The inverse prime so that `(PRIME * INVERSE) & MAXID == 1`
  - A large random integer lower than `2147483647`
 
-You can calculate a prime number yourself, or pick one from this [list](http://primes.utm.edu/lists/small/millions/). Once you have selected a prime number, you can use the included console command to calculated the inverse prime that is used for the decoding process and generate a random integer:
+Luckily for you, I have included a console command that can do all of this for you. To get started, just run the following command:
 
 ```
-> php vendor/bin/optimus spark YOUR_PRIME
+> php vendor/bin/optimus spark
+
+Prime: 2123809381
+Inverse: 1885413229
+Random: 146808189
+```
+
+If you prefer to choose your own prime number (from from [this list](http://primes.utm.edu/lists/small/millions/) for example), you can pass it to the command to calculate the remaining numbers:
+
+```
+> php vendor/bin/optimus spark 1580030173
 
 Prime: 1580030173
 Inverse: 59260789
