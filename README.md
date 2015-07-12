@@ -51,6 +51,8 @@ Random: 1163945558
 Using those numbers, you can start creating instances of `Optimus($prime, $inverted, $random)`:
 
 ```php
+use Jenssegers\Optimus\Optimus;
+
 new Optimus(1580030173, 59260789, 1163945558);
 ```
 
