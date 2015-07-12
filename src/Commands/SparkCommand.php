@@ -4,7 +4,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Jenssegers\Optimus\Optimus;
 use phpseclib\Crypt\Random;
 use phpseclib\Math\BigInteger;
@@ -18,7 +17,7 @@ class SparkCommand extends Command
             ->setDescription('Generate constructor values for your prime')
             ->addArgument(
                'prime',
-               InputArgument::REQUIRED,
+               InputArgument::OPTIONAL,
                'Your prime number'
             );
     }
@@ -26,6 +25,12 @@ class SparkCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $prime = $input->getArgument('prime');
+
+        if ( ! $prime) {
+            $min = new BigInteger(1e7);
+            $max = new BigInteger(Optimus::MAX_INT);
+            $prime = $max->randomPrime($min, $max);
+        }
 
         // Calculate the inverse.
         $a = new BigInteger($prime);
