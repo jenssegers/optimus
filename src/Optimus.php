@@ -86,7 +86,7 @@ class Optimus {
         switch (static::$mode)
         {
             case 'gmp':
-                return ((int) gmp_xor($value, $this->xor) * $this->inverse) & static::MAX_INT;
+                return (int) gmp_mul((int) $value ^ $this->xor, $this->inverse) & static::MAX_INT;
 
             default:
                 return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
