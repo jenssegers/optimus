@@ -25,5 +25,8 @@
             "Jenssegers\\Optimus\\": "src"
         }
     },
+    "suggest": {
+        "ext-gmp": "Required for 32bit systems"
+    },
     "bin": ["optimus"]
 }

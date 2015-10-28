@@ -19,6 +19,12 @@ Install using composer:
 composer require jenssegers/optimus
 ```
 
+For 32 bit systems it is required to install the [GMP extension](http://php.net/manual/en/book.gmp.php). For debian/ubuntu you can install the extension with:
+
+```
+apt-get install php5-gmp
+```
+
 Usage
 -----
 

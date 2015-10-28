@@ -10,6 +10,11 @@ class Optimus {
     const MAX_INT = 2147483647;
 
     /**
+     * @var string
+     */
+    private static $mode;
+
+    /**
      * @var int
      */
     private $prime;
@@ -34,6 +39,12 @@ class Optimus {
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
+
+        // Check which calculation mode we need to use.
+        if (static::$mode === null)
+        {
+            static::$mode = PHP_INT_SIZE === 4 ? 'gmp' : 'native';
+        }
     }
 
     /**
@@ -49,7 +60,14 @@ class Optimus {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        return (((int) $value * $this->prime) & static::MAX_INT) ^ $this->xor;
+        switch (static::$mode)
+        {
+            case 'gmp':
+                return ((int) gmp_mul($value, $this->prime) & static::MAX_INT) ^ $this->xor;
+
+            default:
+                return (((int) $value * $this->prime) & static::MAX_INT) ^ $this->xor;
+        }
     }
 
     /**
@@ -65,7 +83,14 @@ class Optimus {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
+        switch (static::$mode)
+        {
+            case 'gmp':
+                return ((int) gmp_xor($value, $this->xor) * $this->inverse) & static::MAX_INT;
+
+            default:
+                return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
+        }
     }
 
 }
