@@ -15,6 +15,16 @@ class Optimus {
     private static $mode;
 
     /**
+     * Use GMP extension functions.
+     */
+    const MODE_GMP = 'gmp';
+
+    /**
+     * Use native PHP implementation.
+     */
+    const MODE_NATIVE = 'native';
+
+    /**
      * @var int
      */
     private $prime;
@@ -40,10 +50,10 @@ class Optimus {
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
 
-        // Check which calculation mode we need to use.
+        // Check which calculation mode should be used.
         if (static::$mode === null)
         {
-            static::$mode = PHP_INT_SIZE === 4 ? 'gmp' : 'native';
+            static::$mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
         }
     }
 
@@ -62,7 +72,7 @@ class Optimus {
 
         switch (static::$mode)
         {
-            case 'gmp':
+            case self::MODE_GMP:
                 return ((int) gmp_mul($value, $this->prime) & static::MAX_INT) ^ $this->xor;
 
             default:
@@ -85,12 +95,27 @@ class Optimus {
 
         switch (static::$mode)
         {
-            case 'gmp':
+            case static::MODE_GMP:
                 return (int) gmp_mul((int) $value ^ $this->xor, $this->inverse) & static::MAX_INT;
 
             default:
                 return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
         }
+    }
+
+    /**
+     * Set the internal calculation mode (mainly used for testing).
+     *
+     * @param string $mode
+     */
+    public function setMode($mode)
+    {
+        if (! in_array($mode, [static::MODE_GMP, static::MODE_NATIVE]))
+        {
+            throw new InvalidArgumentException('Unkown mode: ' . $mode);
+        }
+
+        static::$mode = $mode;
     }
 
 }

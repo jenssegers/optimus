@@ -70,4 +70,17 @@ class OptimusTest extends PHPUnit_Framework_TestCase {
         $optimus->decode("foo");
     }
 
+    public function testGmpMode()
+    {
+        $optimus = new Optimus(1580030173, 59260789, 200462719);
+        $optimus->setMode(Optimus::MODE_GMP);
+        $id = rand();
+
+        $encoded = $optimus->encode($id);
+        $decoded = $optimus->decode($encoded);
+
+        $this->assertEquals($id, $decoded);
+        $this->assertNotEquals($id, $encoded);
+    }
+
 }
