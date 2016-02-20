@@ -2,8 +2,8 @@
 
 use Jenssegers\Optimus\Optimus;
 
-class OptimusTest extends PHPUnit_Framework_TestCase {
-
+class OptimusTest extends PHPUnit_Framework_TestCase
+{
     public function testEncodeDecodeWithXor()
     {
         $optimus = new Optimus(1580030173, 59260789, 200462719);
@@ -33,8 +33,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase {
     {
         $optimus = new Optimus(1580030173, 59260789);
 
-        for ($i = 0; $i < 20; $i++)
-        {
+        for ($i = 0; $i < 20; $i++) {
             $id = rand();
             $encoded = $optimus->encode($id);
             $decoded = $optimus->decode($encoded);
@@ -82,5 +81,4 @@ class OptimusTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($id, $decoded);
         $this->assertNotEquals($id, $encoded);
     }
-
 }

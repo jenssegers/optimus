@@ -6,7 +6,19 @@
     "finder": [
         {
             "name": "*.php",
-            "exclude": ["tests"],
+            "exclude": [
+                "bin",
+                "tests",
+                "doctrine",
+                "guzzle",
+                "myclabs",
+                "phpdocumentor",
+                "phpspec",
+                "phpunit",
+                "psr",
+                "satooshi",
+                "sebastian"
+            ],
             "in": "vendor"
         }
     ],

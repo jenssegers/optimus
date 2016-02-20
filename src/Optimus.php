@@ -2,8 +2,8 @@
 
 use InvalidArgumentException;
 
-class Optimus {
-
+class Optimus
+{
     /**
      * @var int
      */
@@ -51,8 +51,7 @@ class Optimus {
         $this->xor = (int) $xor;
 
         // Check which calculation mode should be used.
-        if (static::$mode === null)
-        {
+        if (static::$mode === null) {
             static::$mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
         }
     }
@@ -65,13 +64,11 @@ class Optimus {
      */
     public function encode($value)
     {
-        if ( ! is_numeric($value))
-        {
+        if (! is_numeric($value)) {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        switch (static::$mode)
-        {
+        switch (static::$mode) {
             case self::MODE_GMP:
                 return (gmp_intval(gmp_mul($value, $this->prime)) & static::MAX_INT) ^ $this->xor;
 
@@ -88,13 +85,11 @@ class Optimus {
      */
     public function decode($value)
     {
-        if ( ! is_numeric($value))
-        {
+        if (! is_numeric($value)) {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        switch (static::$mode)
-        {
+        switch (static::$mode) {
             case static::MODE_GMP:
                 return gmp_intval(gmp_mul((int) $value ^ $this->xor, $this->inverse)) & static::MAX_INT;
 
@@ -110,12 +105,10 @@ class Optimus {
      */
     public function setMode($mode)
     {
-        if (! in_array($mode, [static::MODE_GMP, static::MODE_NATIVE]))
-        {
+        if (! in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
             throw new InvalidArgumentException('Unkown mode: ' . $mode);
         }
 
         static::$mode = $mode;
     }
-
 }

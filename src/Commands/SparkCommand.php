@@ -27,8 +27,7 @@ class SparkCommand extends Command
         $prime = $input->getArgument('prime');
 
         // Get a pseudo-random prime.
-        if ( ! $prime)
-        {
+        if (! $prime) {
             $min = new BigInteger(1e7);
             $max = new BigInteger(Optimus::MAX_INT);
             $prime = $max->randomPrime($min, $max);
@@ -38,10 +37,8 @@ class SparkCommand extends Command
         $a = new BigInteger($prime);
         $b = new BigInteger(Optimus::MAX_INT + 1);
 
-        if ( ! $inverse = $a->modInverse($b))
-        {
+        if (! $inverse = $a->modInverse($b)) {
             $output->writeln('<error>Invalid prime number</>');
-
             return;
         }
 
