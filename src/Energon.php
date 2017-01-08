@@ -1,4 +1,6 @@
-<?php namespace Jenssegers\Optimus;
+<?php
+
+namespace Jenssegers\Optimus;
 
 use Jenssegers\Optimus\Exceptions\InvalidPrimeException;
 use phpseclib\Crypt\Random;
@@ -29,6 +31,7 @@ class Energon
      * Generates a set of numbers ready for use.
      *
      * @param int|null $prime
+     *
      * @return array
      */
     public static function generate($prime = null)
@@ -38,7 +41,7 @@ class Energon
         return [
             $instance->getPrime(),
             $instance->getInverse(),
-            $instance->getRand()
+            $instance->getRand(),
         ];
     }
 

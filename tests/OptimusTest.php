@@ -47,8 +47,8 @@ class OptimusTest extends PHPUnit_Framework_TestCase
     {
         $optimus = new Optimus(1580030173, 59260789);
 
-        $this->assertEquals($optimus->encode(20), $optimus->encode("20"));
-        $this->assertEquals($optimus->decode(1440713122), $optimus->decode("1440713122"));
+        $this->assertEquals($optimus->encode(20), $optimus->encode('20'));
+        $this->assertEquals($optimus->decode(1440713122), $optimus->decode('1440713122'));
     }
 
     public function testEncodeBadStrings()
@@ -57,7 +57,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase
 
         $optimus = new Optimus(1580030173, 59260789);
 
-        $optimus->encode("foo");
+        $optimus->encode('foo');
     }
 
     public function testDecodeBadStrings()
@@ -66,7 +66,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase
 
         $optimus = new Optimus(1580030173, 59260789);
 
-        $optimus->decode("foo");
+        $optimus->decode('foo');
     }
 
     public function testGmpMode()

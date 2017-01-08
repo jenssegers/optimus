@@ -1,4 +1,6 @@
-<?php namespace Jenssegers\Optimus\Commands;
+<?php
+
+namespace Jenssegers\Optimus\Commands;
 
 use Jenssegers\Optimus\Energon;
 use Jenssegers\Optimus\Exceptions\InvalidPrimeException;
@@ -27,6 +29,7 @@ class SparkCommand extends Command
             list($prime, $inverse, $rand) = Energon::generate($input->getArgument('prime'));
         } catch (InvalidPrimeException $e) {
             $output->writeln('<error>Invalid prime number</>');
+
             return;
         }
 

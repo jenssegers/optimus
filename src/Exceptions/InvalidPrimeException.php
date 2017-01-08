@@ -1,4 +1,6 @@
-<?php namespace Jenssegers\Optimus\Exceptions;
+<?php
+
+namespace Jenssegers\Optimus\Exceptions;
 
 use Exception;
 use phpseclib\Math\BigInteger;
@@ -13,7 +15,7 @@ class InvalidPrimeException extends RangeException
      * @param int             $code
      * @param \Exception|null $previous
      */
-    public function __construct($message = "", $code = 0, Exception $previous = null)
+    public function __construct($message = '', $code = 0, Exception $previous = null)
     {
         if ($message instanceof BigInteger) {
             $message = $message->toString();

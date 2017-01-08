@@ -1,4 +1,6 @@
-<?php namespace Jenssegers\Optimus;
+<?php
+
+namespace Jenssegers\Optimus;
 
 use InvalidArgumentException;
 
@@ -60,6 +62,7 @@ class Optimus
      * Encode an integer.
      *
      * @param  int $value
+     *
      * @return int
      */
     public function encode($value)
@@ -81,6 +84,7 @@ class Optimus
      * Decode an integer.
      *
      * @param  int $value
+     *
      * @return int
      */
     public function decode($value)
