@@ -19,10 +19,12 @@ Install using composer:
 composer require jenssegers/optimus
 ```
 
-For 32 bit systems it is required to install the [GMP extension](http://php.net/manual/en/book.gmp.php). For debian/ubuntu you can install the extension with:
+For 32 bit systems it is required to install the [GMP extension](http://php.net/manual/en/book.gmp.php). For debian/ubuntu you can install the extension with one of these commands:
 
 ```
 apt-get install php5-gmp
+apt-get install php7.0-gmp
+apt-get install php7.1-gmp
 ```
 
 Usage
@@ -77,3 +79,47 @@ To decode the resulting `1535832388` back to its original value, use the `decode
 ```php
 $original = $optimus->decode(1535832388); // 20
 ```
+
+## Laravel integration
+
+This is an example service provider which registers a shared Optimus instance for your entire application:
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Jenssegers\Optimus\Optimus;
+use Illuminate\Support\ServiceProvider;
+
+class OptimusServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->singleton(Optimus::class, function ($app) {
+            return new Optimus(1580030173, 59260789, 1163945558);
+        });
+    }
+}
+```
+
+Laravel's automatic injection will pass this instance where needed. Example controller:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Jenssegers\Optimus\Optimus;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    public function show($id, Optimus $optimus)
+    {
+        $id = $optimus->decode($id));
+    }
+}
+```
+
+More information: https://laravel.com/docs/5.3/container#resolving
