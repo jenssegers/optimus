@@ -103,6 +103,13 @@ class OptimusServiceProvider extends ServiceProvider
 }
 ```
 
+Once you have created the service provider, add it to the providers array in your `config/app.php` configuration file:
+
+```
+App\Providers\OptimusServiceProvider::class,
+```
+
+
 Laravel's automatic injection will pass this instance where needed. Example controller:
 
 ```php
