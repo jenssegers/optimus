@@ -80,7 +80,9 @@ To decode the resulting `1535832388` back to its original value, use the `decode
 $original = $optimus->decode(1535832388); // 20
 ```
 
-## Laravel integration
+## Framework Integrations
+
+### Laravel
 
 This is an example service provider which registers a shared Optimus instance for your entire application:
 
@@ -130,3 +132,9 @@ class UserController extends Controller
 ```
 
 More information: https://laravel.com/docs/5.3/container#resolving
+
+### Silex
+
+An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](https://packagist.org/packages/jaam/silex-optimus-provider) package.
+
+See the repository for more information: https://github.com/letsjaam/silex-optimus-provider
