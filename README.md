@@ -84,9 +84,58 @@ $original = $optimus->decode(1535832388); // 20
 
 ### Laravel
 
-An integration with Laravel is provided by the [propaganistas/laravel-fakeid](https://packagist.org/packages/propaganistas/laravel-fakeid) package.
+This is an example service provider which registers a shared Optimus instance for your entire application:
 
-See the repository for more information: https://github.com/propaganistas/laravel-fakeid
+```php
+<?php
+
+namespace App\Providers;
+
+use Jenssegers\Optimus\Optimus;
+use Illuminate\Support\ServiceProvider;
+
+class OptimusServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->singleton(Optimus::class, function ($app) {
+            return new Optimus(1580030173, 59260789, 1163945558);
+        });
+    }
+}
+```
+
+Once you have created the service provider, add it to the providers array in your `config/app.php` configuration file:
+
+```
+App\Providers\OptimusServiceProvider::class,
+```
+
+
+Laravel's automatic injection will pass this instance where needed. Example controller:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Jenssegers\Optimus\Optimus;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    public function show($id, Optimus $optimus)
+    {
+        $id = $optimus->decode($id));
+    }
+}
+```
+
+More information: https://laravel.com/docs/5.3/container#resolving
+
+**Third-party integrations**
+
+An integration with Laravel is provided by the [propaganistas/laravel-fakeid](https://packagist.org/packages/propaganistas/laravel-fakeid) package.
 
 ### Silex
 
