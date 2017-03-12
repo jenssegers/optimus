@@ -9,13 +9,11 @@ use phpseclib\Math\BigInteger;
 class Energon
 {
     /**
-     * @var \phpseclib\Math\BigInteger
+     * @var BigInteger
      */
     protected $prime;
 
     /**
-     * Energon constructor.
-     *
      * @param int|null $prime
      */
     public function __construct($prime = null)
