@@ -133,6 +133,10 @@ class UserController extends Controller
 
 More information: https://laravel.com/docs/5.3/container#resolving
 
+**Third-party integrations**
+
+An integration with Laravel is provided by the [propaganistas/laravel-fakeid](https://packagist.org/packages/propaganistas/laravel-fakeid) package.
+
 ### Silex
 
 An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](https://packagist.org/packages/jaam/silex-optimus-provider) package.
