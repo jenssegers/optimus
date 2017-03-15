@@ -43,7 +43,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase
     public function testEncodeDecodeRandomNumbers()
     {
         for ($i = 0; $i < 1000; $i++) {
-            $id = rand();
+            $id = rand(0, Optimus::MAX_INT);
             $encoded = $this->optimus->encode($id);
             $decoded = $this->optimus->decode($encoded);
 
@@ -77,7 +77,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase
         $this->optimus->setMode(Optimus::MODE_GMP);
 
         for ($i = 0; $i < 1000; $i++) {
-            $id = rand();
+            $id = rand(0, Optimus::MAX_INT);
             $encoded = $this->optimus->encode($id);
             $decoded = $this->optimus->decode($encoded);
 
