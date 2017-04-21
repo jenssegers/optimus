@@ -1,4 +1,5 @@
 {
+    "alias": "optimus.phar",
     "chmod": "0755",
     "directories": [
         "src"
@@ -17,7 +18,12 @@
                 "phpunit",
                 "psr",
                 "satooshi",
-                "sebastian"
+                "sebastian",
+                "webmozart",
+                "tedivm",
+                "seld",
+                "phine",
+                "justinrainbow"
             ],
             "in": "vendor"
         }
