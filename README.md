@@ -139,8 +139,4 @@ An integration with Laravel is provided by the [propaganistas/laravel-fakeid](ht
 
 For Optimus with multiple connections you can use [cybercog/laravel-optimus](https://github.com/cybercog/laravel-optimus) package.
 
-### Silex
-
 An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](https://packagist.org/packages/jaam/silex-optimus-provider) package.
-
-See the repository for more information: https://github.com/letsjaam/silex-optimus-provider
