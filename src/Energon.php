@@ -44,14 +44,34 @@ class Energon
     }
 
     /**
+     * Generates a set of numbers ready for use (with a custom max cap).
+     *
+     * @param int $max
+     *
+     * @return array
+     */
+    public static function generateMax($max)
+    {
+        $instance = new static(static::generatePrime($max));
+
+        return [
+            $instance->getPrime(),
+            $instance->getInverse($max),
+            $instance->getRand($max),
+        ];
+    }
+
+    /**
      * Generate a random large prime.
+     *
+     * @param int|null $max
      *
      * @return int
      */
-    public static function generatePrime()
+    public static function generatePrime($max = null)
     {
         $min = new BigInteger(1e7);
-        $max = new BigInteger(Optimus::MAX_INT);
+        $max = new BigInteger($max ?: Optimus::DEFAULT_MAX_INT);
 
         return (int) $max->randomPrime($min, $max)->toString();
     }
@@ -59,11 +79,13 @@ class Energon
     /**
      * Generate a random large number.
      *
+     * @param int|null $max
+     *
      * @return int
      */
-    public static function generateRandomInteger()
+    public static function generateRandomInteger($max = null)
     {
-        return (int) hexdec(bin2hex(Random::string(4))) & Optimus::MAX_INT;
+        return (int) hexdec(bin2hex(Random::string(4))) & ($max ?: Optimus::DEFAULT_MAX_INT);
     }
 
     /**
@@ -97,11 +119,13 @@ class Energon
     /**
      * Get the inverse of the current prime.
      *
+     * @param int|null $max
+     *
      * @return int
      */
-    public function getInverse()
+    public function getInverse($max = null)
     {
-        $x = new BigInteger(Optimus::MAX_INT + 1);
+        $x = new BigInteger(($max ?: Optimus::DEFAULT_MAX_INT) + 1);
 
         if (! $inverse = $this->prime->modInverse($x)) {
             throw new InvalidPrimeException($this->prime);
@@ -113,10 +137,12 @@ class Energon
     /**
      * Alias method for getting a random big number.
      *
+     * @param int|null $max
+     *
      * @return int
      */
-    public function getRand()
+    public function getRand($max = null)
     {
-        return static::generateRandomInteger();
+        return static::generateRandomInteger($max);
     }
 }

@@ -33,10 +33,25 @@ class EnergonTest extends PHPUnit_Framework_TestCase
         $set = Energon::generate();
 
         $first = new BigInteger($set[0]);
-        $x = new BigInteger(Optimus::MAX_INT + 1);
+        $x = new BigInteger(Optimus::DEFAULT_MAX_INT + 1);
 
         $this->assertTrue($first->isPrime());
         $this->assertEquals($first->modInverse($x)->toString(), $set[1]);
+    }
+
+    public function testGeneratesWithinMaxConstraint()
+    {
+        for ($i = 0; $i < 1000; $i++) {
+            $max = pow(2, rand(2, 31)) - 1;
+
+            $set = Energon::generateMax($max);
+
+            $first = new BigInteger($set[0]);
+            $x = new BigInteger($max + 1);
+
+            $this->assertTrue($first->isPrime());
+            $this->assertEquals($first->modInverse($x)->toString(), $set[1]);
+        }
     }
 
     public function testInvalidPrimeProvided()

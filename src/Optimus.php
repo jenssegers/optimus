@@ -9,7 +9,7 @@ class Optimus
     /**
      * @var int
      */
-    const MAX_INT = 2147483647;
+    const DEFAULT_MAX_INT = 2147483647;
 
     /**
      * @var string
@@ -25,6 +25,11 @@ class Optimus
      * Use native PHP implementation.
      */
     const MODE_NATIVE = 'native';
+
+    /**
+     * @var int
+     */
+    private $max;
 
     /**
      * @var int
@@ -45,12 +50,14 @@ class Optimus
      * @param int $prime
      * @param int $xor
      * @param int $inverse
+     * @param int $max
      */
-    public function __construct($prime, $inverse, $xor = 0)
+    public function __construct($prime, $inverse, $xor = 0, $max = null)
     {
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
+        $this->max = $max === null ? static::DEFAULT_MAX_INT : (int) $max;
 
         // Check which calculation mode should be used.
         if (static::$mode === null) {
@@ -73,10 +80,10 @@ class Optimus
 
         switch (static::$mode) {
             case self::MODE_GMP:
-                return (gmp_intval(gmp_mul($value, $this->prime)) & static::MAX_INT) ^ $this->xor;
+                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
 
             default:
-                return (((int) $value * $this->prime) & static::MAX_INT) ^ $this->xor;
+                return (((int) $value * $this->prime) & $this->max) ^ $this->xor;
         }
     }
 
@@ -95,10 +102,10 @@ class Optimus
 
         switch (static::$mode) {
             case static::MODE_GMP:
-                return gmp_intval(gmp_mul((int) $value ^ $this->xor, $this->inverse)) & static::MAX_INT;
+                return gmp_intval(gmp_mul((int) $value ^ $this->xor, $this->inverse)) & $this->max;
 
             default:
-                return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
+                return (((int) $value ^ $this->xor) * $this->inverse) & $this->max;
         }
     }
 
@@ -114,5 +121,15 @@ class Optimus
         }
 
         static::$mode = $mode;
+    }
+
+    /**
+     * Set the maximum integer.
+     *
+     * @param int $max
+     */
+    public function setMax($max)
+    {
+        $this->max = $max;
     }
 }
