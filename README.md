@@ -140,3 +140,5 @@ An integration with Laravel is provided by the [propaganistas/laravel-fakeid](ht
 Laravel Optimus with multiple connections provided by the [cybercog/laravel-optimus](https://github.com/cybercog/laravel-optimus) package.
 
 An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](https://packagist.org/packages/jaam/silex-optimus-provider) package.
+
+An integration with Laravel is provided by the [elfsundae/laravel-hashid](https://github.com/ElfSundae/laravel-hashid) package.
