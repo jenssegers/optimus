@@ -118,7 +118,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase
     public function testEncodeDecodeRandomNumbers($maxBits)
     {
         $maxInt = pow(2, $maxBits);
-        list($prime, $inverse, $xor) = Energon::generate(null, $maxInt);
+        list($prime, $inverse, $xor) = Energon::generate(null, $maxBits);
 
         $optimus = new Optimus($prime, $inverse, $xor, $maxBits);
 
