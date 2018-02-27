@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Jenssegers\Optimus\Commands\SparkCommand;
 use Symfony\Component\Console\Application;

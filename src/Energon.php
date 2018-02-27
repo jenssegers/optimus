@@ -14,15 +14,21 @@ class Energon
     protected $prime;
 
     /**
+     * @var int
+     */
+    private $maxBits;
+
+    /**
      * @param int|null $prime
      */
-    public function __construct($prime = null)
+    public function __construct($prime = null, $maxBits = Optimus::DEFAULT_MAX_BITS)
     {
         if (is_null($prime)) {
-            $prime = static::generatePrime();
+            $prime = static::generatePrime($maxBits);
         }
 
         $this->setPrime($prime);
+        $this->setMaxBits($maxBits);
     }
 
     /**
@@ -32,9 +38,9 @@ class Energon
      *
      * @return array
      */
-    public static function generate($prime = null)
+    public static function generate($prime = null, $maxBits = Optimus::DEFAULT_MAX_BITS)
     {
-        $instance = new static($prime);
+        $instance = new static($prime, $maxBits);
 
         return [
             $instance->getPrime(),
@@ -48,12 +54,33 @@ class Energon
      *
      * @return int
      */
-    public static function generatePrime()
+    public static function generatePrime($maxBits = Optimus::DEFAULT_MAX_BITS)
     {
-        $min = new BigInteger(1e7);
-        $max = new BigInteger(Optimus::MAX_INT);
+        $max = self::createMaxInt($maxBits);
+        $expForMin =  max(1,floor(log10($max->toString()))-2);
+        $min = new BigInteger(pow(10, $expForMin));
 
         return (int) $max->randomPrime($min, $max)->toString();
+    }
+
+    /**
+     * Calculate the modular multiplicative inverse of the prime number
+     * @param int|BigInteger $prime
+     * @return int
+     */
+    public static function calculateInverse($prime, $maxBits = Optimus::DEFAULT_MAX_BITS)
+    {
+        if (!$prime instanceof BigInteger) {
+            $prime = new BigInteger($prime);
+        }
+
+        $x = self::createMaxInt($maxBits)->add(new BigInteger(1));
+
+        if (! $inverse = $prime->modInverse($x)) {
+            throw new InvalidPrimeException($prime);
+        }
+
+        return (int) $inverse->toString();
     }
 
     /**
@@ -61,9 +88,11 @@ class Energon
      *
      * @return int
      */
-    public static function generateRandomInteger()
+    public static function generateRandomInteger($maxBits = Optimus::DEFAULT_MAX_BITS)
     {
-        return (int) hexdec(bin2hex(Random::string(4))) & Optimus::MAX_INT;
+        return (int) (new BigInteger(hexdec(bin2hex(Random::string(4)))))
+            ->bitwise_and(self::createMaxInt($maxBits))
+            ->toString();
     }
 
     /**
@@ -79,7 +108,7 @@ class Energon
     /**
      * Safely set the current prime as a BigInteger.
      *
-     * @param mixed $prime
+     * @param int|BigInteger $prime
      */
     public function setPrime($prime)
     {
@@ -94,6 +123,11 @@ class Energon
         $this->prime = $prime;
     }
 
+    public function setMaxBits($bits)
+    {
+        $this->maxBits = $bits;
+    }
+
     /**
      * Get the inverse of the current prime.
      *
@@ -101,13 +135,7 @@ class Energon
      */
     public function getInverse()
     {
-        $x = new BigInteger(Optimus::MAX_INT + 1);
-
-        if (! $inverse = $this->prime->modInverse($x)) {
-            throw new InvalidPrimeException($this->prime);
-        }
-
-        return (int) $inverse->toString();
+        return self::calculateInverse($this->prime, $this->maxBits);
     }
 
     /**
@@ -117,6 +145,15 @@ class Energon
      */
     public function getRand()
     {
-        return static::generateRandomInteger();
+        return static::generateRandomInteger($this->maxBits);
+    }
+
+    /**
+     * @param int $maxBits
+     * @return BigInteger
+     */
+    protected static function createMaxInt($maxBits)
+    {
+        return (new BigInteger(pow(2, $maxBits)))->subtract(new BigInteger(1));
     }
 }

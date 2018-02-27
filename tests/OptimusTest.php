@@ -16,40 +16,130 @@ class OptimusTest extends PHPUnit_Framework_TestCase
         $this->optimus = new Optimus($prime, $inverse, $xor);
     }
 
-    public function testEncodeDecodeWithXor()
+    /**
+     * @dataProvider getPrimesTestData
+     * @param $prime
+     * @param $inverse
+     * @param $xor
+     * @param $maxBits
+     * @param $value
+     */
+    public function testEncodeDecode($prime, $inverse, $xor, $maxBits, $value)
     {
-        $encoded = $this->optimus->encode(1);
-        $decoded = $this->optimus->decode($encoded);
+        $optimus = new Optimus($prime, $inverse, $xor, $maxBits);
 
-        $this->assertNotEquals(1, $encoded);
-        $this->assertNotEquals($encoded, $decoded);
-        $this->assertEquals(1, $decoded);
-    }
-
-    public function testEncodeDecodeWithoutXor()
-    {
-        list($prime, $inverse, $xor) = Energon::generate();
-        $optimus = new Optimus($prime, $inverse);
-        $optimus->setMode(Optimus::MODE_NATIVE);
-
-        $encoded = $optimus->encode(1);
+        $encoded = $optimus->encode($value);
         $decoded = $optimus->decode($encoded);
 
-        $this->assertNotEquals(1, $encoded);
-        $this->assertNotEquals($encoded, $decoded);
-        $this->assertEquals(1, $decoded);
+        $assertMsgDetails = sprintf(
+            'Prime: %s, Inverse: %s, Xor: %s, MaxBits: %s, Value: %s',
+            $prime,
+            $inverse,
+            $xor,
+            $maxBits,
+            $value
+        );
+
+        $this->assertNotEquals(
+            $value,
+            $encoded,
+            "The encoded value is not different to the original value. ($assertMsgDetails)"
+        );
+        $this->assertNotEquals(
+            $encoded,
+            $decoded,
+            "The encoded and decoded values are equal. ($assertMsgDetails)"
+        );
+        $this->assertEquals(
+            $value,
+            $decoded,
+            "The encoded value did not decode correctly. ($assertMsgDetails)"
+        );
     }
 
-    public function testEncodeDecodeRandomNumbers()
+    public function getPrimesTestData()
     {
+        $maxBit31 = 31;
+        $maxBit32 = 32;
+        $maxBit24 = 24;
+
+        $maxBits = [
+            $maxBit31,
+            $maxBit32,
+            $maxBit24
+        ];
+
+        $randXor = 873691988;
+        $smlPrime = 10000019;
+
+        $lrgPrimes = [
+            $maxBit31 => 2147483647,
+            $maxBit32 => 4294967291,
+            $maxBit24 => 999999967,
+        ];
+
+        $smlPrimeInverses = [
+            $maxBit31 => Energon::calculateInverse($smlPrime, $maxBit31),
+            $maxBit32 => Energon::calculateInverse($smlPrime, $maxBit32),
+            $maxBit24 => Energon::calculateInverse($smlPrime, $maxBit24)
+        ];
+
+        $lrgPrimeInverses = [
+            $maxBit31 => Energon::calculateInverse($lrgPrimes[$maxBit31], $maxBit31),
+            $maxBit32 => Energon::calculateInverse($lrgPrimes[$maxBit32], $maxBit32),
+            $maxBit24 => Energon::calculateInverse($lrgPrimes[$maxBit24], $maxBit24)
+        ];
+
+        $testData = [];
+
+        foreach ($maxBits as $maxBit) {
+            $testData = array_merge(
+                $testData,
+                [
+                    [$smlPrime, $smlPrimeInverses[$maxBit], 0, $maxBit, 1],
+                    [$smlPrime, $smlPrimeInverses[$maxBit], 0, $maxBit, $maxBit],
+                    [$smlPrime, $smlPrimeInverses[$maxBit], $randXor, $maxBit, 1],
+                    [$smlPrime, $smlPrimeInverses[$maxBit], $randXor, $maxBit, $maxBit],
+                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], 0, $maxBit, 1],
+                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], 0, $maxBit, $maxBit],
+                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], $randXor, $maxBit, 1],
+                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], $randXor, $maxBit, $maxBit],
+                ]
+            );
+        }
+
+        return $testData;
+    }
+
+    /**
+     * @dataProvider getMaxIntTestData
+     * @param $maxBits
+     */
+    public function testEncodeDecodeRandomNumbers($maxBits)
+    {
+        $maxInt = pow(2, $maxBits);
+        list($prime, $inverse, $xor) = Energon::generate(null, $maxInt);
+
+        $optimus = new Optimus($prime, $inverse, $xor, $maxBits);
+
         for ($i = 0; $i < 1000; $i++) {
-            $id = rand(0, Optimus::MAX_INT);
-            $encoded = $this->optimus->encode($id);
-            $decoded = $this->optimus->decode($encoded);
+            $id = rand(0, $maxInt);
+            $encoded = $optimus->encode($id);
+            $decoded = $optimus->decode($encoded);
 
             $this->assertEquals($id, $decoded);
             $this->assertNotEquals($id, $encoded);
         }
+    }
+
+    public function getMaxIntTestData()
+    {
+        return [
+            [31],
+            [32],
+            [24],
+            [16]
+        ];
     }
 
     public function testEncodeStrings()
