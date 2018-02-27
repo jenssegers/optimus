@@ -220,7 +220,7 @@ namespace {
 
 namespace Jenssegers\Optimus {
 
-    function extension_loaded ($name) {
+    function extension_loaded($name) {
         return \OptimusTest::$gmpExtensionLoaded === null ? \extension_loaded($name) : \OptimusTest::$gmpExtensionLoaded;
     }
 }
