@@ -12,7 +12,7 @@ class Optimus
      */
     const MAX_INT = 2147483647;
 
-    const DEFAULT_MAX_BITS = 31;
+    const DEFAULT_BIT_LENGTH = 31;
 
     /**
      * @var string
@@ -44,24 +44,28 @@ class Optimus
      */
     private $xor;
 
+    /**
+     * @var int
+     */
     private $maxInt;
 
     /**
      * @param int $prime
-     * @param int $xor
      * @param int $inverse
+     * @param int $xor
+     * @param int $bitLength
      */
-    public function __construct($prime, $inverse, $xor = 0, $maxBits = self::DEFAULT_MAX_BITS)
+    public function __construct($prime, $inverse, $xor = 0, $bitLength = self::DEFAULT_BIT_LENGTH)
     {
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
-        $this->maxInt = (int) pow(2, $maxBits)-1;
+        $this->maxInt = (int) pow(2, $bitLength)-1;
 
         // Check which calculation mode should be used.
-        $this->mode = PHP_INT_SIZE === 4 || $maxBits > 31 ? static::MODE_GMP : static::MODE_NATIVE;
+        $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
 
-        if ($this->mode == static::MODE_GMP && !extension_loaded(static::MODE_GMP)) {
+        if (($this->mode == static::MODE_GMP || $bitLength > 31) && !extension_loaded(static::MODE_GMP)) {
             throw new \RuntimeException(
                 "The GNU Multiple Precision functions are required for calculations on your system."
             );
@@ -81,7 +85,16 @@ class Optimus
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        switch ($this->mode) {
+        $doMode = $this->mode;
+
+        if ($doMode === self::MODE_NATIVE
+            && PHP_INT_SIZE == 8
+            && ($value * $this->prime) > 9e18
+        ) {
+            $doMode = self::MODE_GMP;
+        }
+
+        switch ($doMode) {
             case self::MODE_GMP:
                 return (gmp_intval(gmp_mul($value, $this->prime)) & $this->maxInt) ^ $this->xor;
 

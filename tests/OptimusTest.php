@@ -21,22 +21,22 @@ class OptimusTest extends PHPUnit_Framework_TestCase
      * @param $prime
      * @param $inverse
      * @param $xor
-     * @param $maxBits
+     * @param $bitLength
      * @param $value
      */
-    public function testEncodeDecode($prime, $inverse, $xor, $maxBits, $value)
+    public function testEncodeDecode($prime, $inverse, $xor, $bitLength, $value)
     {
-        $optimus = new Optimus($prime, $inverse, $xor, $maxBits);
+        $optimus = new Optimus($prime, $inverse, $xor, $bitLength);
 
         $encoded = $optimus->encode($value);
         $decoded = $optimus->decode($encoded);
 
         $assertMsgDetails = sprintf(
-            'Prime: %s, Inverse: %s, Xor: %s, MaxBits: %s, Value: %s',
+            'Prime: %s, Inverse: %s, Xor: %s, Bit length: %s, Value: %s',
             $prime,
             $inverse,
             $xor,
-            $maxBits,
+            $bitLength,
             $value
         );
 
@@ -59,51 +59,51 @@ class OptimusTest extends PHPUnit_Framework_TestCase
 
     public function getPrimesTestData()
     {
-        $maxBit31 = 31;
-        $maxBit32 = 32;
-        $maxBit24 = 24;
+        $bitLength31 = 31;
+        $bitlength32 = 32;
+        $bitLength24 = 24;
 
-        $maxBits = [
-            $maxBit31,
-            $maxBit32,
-            $maxBit24
+        $bitLengths = [
+            $bitLength31,
+            $bitlength32,
+            $bitLength24
         ];
 
         $randXor = 873691988;
         $smlPrime = 10000019;
 
         $lrgPrimes = [
-            $maxBit31 => 2147483647,
-            $maxBit32 => 4294967291,
-            $maxBit24 => 999999967,
+            $bitLength31 => 2147483647,
+            $bitlength32 => 4294967291,
+            $bitLength24 => 999999967,
         ];
 
         $smlPrimeInverses = [
-            $maxBit31 => Energon::calculateInverse($smlPrime, $maxBit31),
-            $maxBit32 => Energon::calculateInverse($smlPrime, $maxBit32),
-            $maxBit24 => Energon::calculateInverse($smlPrime, $maxBit24)
+            $bitLength31 => Energon::calculateInverse($smlPrime, $bitLength31),
+            $bitlength32 => Energon::calculateInverse($smlPrime, $bitlength32),
+            $bitLength24 => Energon::calculateInverse($smlPrime, $bitLength24)
         ];
 
         $lrgPrimeInverses = [
-            $maxBit31 => Energon::calculateInverse($lrgPrimes[$maxBit31], $maxBit31),
-            $maxBit32 => Energon::calculateInverse($lrgPrimes[$maxBit32], $maxBit32),
-            $maxBit24 => Energon::calculateInverse($lrgPrimes[$maxBit24], $maxBit24)
+            $bitLength31 => Energon::calculateInverse($lrgPrimes[$bitLength31], $bitLength31),
+            $bitlength32 => Energon::calculateInverse($lrgPrimes[$bitlength32], $bitlength32),
+            $bitLength24 => Energon::calculateInverse($lrgPrimes[$bitLength24], $bitLength24)
         ];
 
         $testData = [];
 
-        foreach ($maxBits as $maxBit) {
+        foreach ($bitLengths as $bitLength) {
             $testData = array_merge(
                 $testData,
                 [
-                    [$smlPrime, $smlPrimeInverses[$maxBit], 0, $maxBit, 1],
-                    [$smlPrime, $smlPrimeInverses[$maxBit], 0, $maxBit, $maxBit],
-                    [$smlPrime, $smlPrimeInverses[$maxBit], $randXor, $maxBit, 1],
-                    [$smlPrime, $smlPrimeInverses[$maxBit], $randXor, $maxBit, $maxBit],
-                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], 0, $maxBit, 1],
-                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], 0, $maxBit, $maxBit],
-                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], $randXor, $maxBit, 1],
-                    [$lrgPrimes[$maxBit], $lrgPrimeInverses[$maxBit], $randXor, $maxBit, $maxBit],
+                    [$smlPrime, $smlPrimeInverses[$bitLength], 0, $bitLength, 1],
+                    [$smlPrime, $smlPrimeInverses[$bitLength], 0, $bitLength, $bitLength],
+                    [$smlPrime, $smlPrimeInverses[$bitLength], $randXor, $bitLength, 1],
+                    [$smlPrime, $smlPrimeInverses[$bitLength], $randXor, $bitLength, $bitLength],
+                    [$lrgPrimes[$bitLength], $lrgPrimeInverses[$bitLength], 0, $bitLength, 1],
+                    [$lrgPrimes[$bitLength], $lrgPrimeInverses[$bitLength], 0, $bitLength, $bitLength],
+                    [$lrgPrimes[$bitLength], $lrgPrimeInverses[$bitLength], $randXor, $bitLength, 1],
+                    [$lrgPrimes[$bitLength], $lrgPrimeInverses[$bitLength], $randXor, $bitLength, $bitLength],
                 ]
             );
         }
@@ -112,15 +112,15 @@ class OptimusTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getMaxIntTestData
-     * @param $maxBits
+     * @dataProvider getBitLengthTestData
+     * @param $bitLength
      */
-    public function testEncodeDecodeRandomNumbers($maxBits)
+    public function testEncodeDecodeRandomNumbers($bitLength)
     {
-        $maxInt = pow(2, $maxBits);
-        list($prime, $inverse, $xor) = Energon::generate(null, $maxBits);
+        $maxInt = pow(2, $bitLength);
+        list($prime, $inverse, $xor) = Energon::generate(null, $bitLength);
 
-        $optimus = new Optimus($prime, $inverse, $xor, $maxBits);
+        $optimus = new Optimus($prime, $inverse, $xor, $bitLength);
 
         for ($i = 0; $i < 1000; $i++) {
             $id = rand(0, $maxInt);
@@ -132,7 +132,7 @@ class OptimusTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function getMaxIntTestData()
+    public function getBitLengthTestData()
     {
         return [
             [31],

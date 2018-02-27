@@ -22,8 +22,8 @@ class SparkCommand extends Command
                 'bits',
                 'b',
                 InputOption::VALUE_REQUIRED,
-                'The number of bits to use in the obfuscation. E.g. 16 bits will produce numbers in the range 1 to 65536.',
-                Optimus::DEFAULT_MAX_BITS
+                'The number of bits used to obfuscate the integer. E.g. 16 bits will produce numbers in the range 1 to 65535.',
+                Optimus::DEFAULT_BIT_LENGTH
             )->addArgument(
                'prime',
                InputArgument::OPTIONAL,
@@ -33,23 +33,36 @@ class SparkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $bits = $input->getOption('bits');
+        $bitLength = $input->getOption('bits');
+
+        $minBitLength = 4;
+        $maxBitLength = 62;
+
+        if (!filter_var(
+            $bitLength,
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => $minBitLength, 'max_range' => $maxBitLength]]
+        )) {
+            throw new \InvalidArgumentException(
+                "The bits option must be an integer between $minBitLength and $maxBitLength."
+            );
+        }
 
         try {
             list($prime, $inverse, $rand) = Energon::generate(
                 $input->getArgument('prime'),
-                $bits
+                $bitLength
             );
         } catch (InvalidPrimeException $e) {
             $output->writeln('<error>Invalid prime number</>');
 
-            return;
+            return 1;
         }
 
         $output->writeln('Prime: ' . $prime);
         $output->writeln('Inverse: ' . $inverse);
         $output->writeln('Random: ' . $rand);
-        $output->writeln('Bits: ' . $bits);
+        $output->writeln('Bit length: ' . $bitLength);
         $output->writeln('');
         $output->writeln(
             sprintf(
@@ -57,7 +70,7 @@ class SparkCommand extends Command
                 $prime,
                 $inverse,
                 $rand,
-                $bits
+                $bitLength
             )
         );
     }

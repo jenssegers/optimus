@@ -16,19 +16,20 @@ class Energon
     /**
      * @var int
      */
-    private $maxBits;
+    private $bitLength;
 
     /**
      * @param int|null $prime
+     * @param int $bitLength
      */
-    public function __construct($prime = null, $maxBits = Optimus::DEFAULT_MAX_BITS)
+    public function __construct($prime = null, $bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
         if (is_null($prime)) {
-            $prime = static::generatePrime($maxBits);
+            $prime = static::generatePrime($bitLength);
         }
 
         $this->setPrime($prime);
-        $this->setMaxBits($maxBits);
+        $this->setBitLength($bitLength);
     }
 
     /**
@@ -36,11 +37,12 @@ class Energon
      *
      * @param int|null $prime
      *
+     * @param int $bitLength
      * @return array
      */
-    public static function generate($prime = null, $maxBits = Optimus::DEFAULT_MAX_BITS)
+    public static function generate($prime = null, $bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
-        $instance = new static($prime, $maxBits);
+        $instance = new static($prime, $bitLength);
 
         return [
             $instance->getPrime(),
@@ -52,11 +54,12 @@ class Energon
     /**
      * Generate a random large prime.
      *
+     * @param int $bitLength
      * @return int
      */
-    public static function generatePrime($maxBits = Optimus::DEFAULT_MAX_BITS)
+    public static function generatePrime($bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
-        $max = self::createMaxInt($maxBits);
+        $max = self::createMaxInt($bitLength);
         $expForMin =  max(1,floor(log10($max->toString()))-2);
         $min = new BigInteger(pow(10, $expForMin));
 
@@ -66,15 +69,16 @@ class Energon
     /**
      * Calculate the modular multiplicative inverse of the prime number
      * @param int|BigInteger $prime
+     * @param int $bitLength
      * @return int
      */
-    public static function calculateInverse($prime, $maxBits = Optimus::DEFAULT_MAX_BITS)
+    public static function calculateInverse($prime, $bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
         if (!$prime instanceof BigInteger) {
             $prime = new BigInteger($prime);
         }
 
-        $x = self::createMaxInt($maxBits)->add(new BigInteger(1));
+        $x = self::createMaxInt($bitLength)->add(new BigInteger(1));
 
         if (! $inverse = $prime->modInverse($x)) {
             throw new InvalidPrimeException($prime);
@@ -86,12 +90,13 @@ class Energon
     /**
      * Generate a random large number.
      *
+     * @param int $bitLength
      * @return int
      */
-    public static function generateRandomInteger($maxBits = Optimus::DEFAULT_MAX_BITS)
+    public static function generateRandomInteger($bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
         return (int) (new BigInteger(hexdec(bin2hex(Random::string(4)))))
-            ->bitwise_and(self::createMaxInt($maxBits))
+            ->bitwise_and(self::createMaxInt($bitLength))
             ->toString();
     }
 
@@ -123,9 +128,9 @@ class Energon
         $this->prime = $prime;
     }
 
-    public function setMaxBits($bits)
+    public function setBitLength($bits)
     {
-        $this->maxBits = $bits;
+        $this->bitLength = $bits;
     }
 
     /**
@@ -135,7 +140,7 @@ class Energon
      */
     public function getInverse()
     {
-        return self::calculateInverse($this->prime, $this->maxBits);
+        return self::calculateInverse($this->prime, $this->bitLength);
     }
 
     /**
@@ -145,15 +150,15 @@ class Energon
      */
     public function getRand()
     {
-        return static::generateRandomInteger($this->maxBits);
+        return static::generateRandomInteger($this->bitLength);
     }
 
     /**
-     * @param int $maxBits
+     * @param int $bitLength
      * @return BigInteger
      */
-    protected static function createMaxInt($maxBits)
+    protected static function createMaxInt($bitLength)
     {
-        return (new BigInteger(pow(2, $maxBits)))->subtract(new BigInteger(1));
+        return (new BigInteger(pow(2, $bitLength)))->subtract(new BigInteger(1));
     }
 }

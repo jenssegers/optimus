@@ -7,11 +7,12 @@ use phpseclib\Math\BigInteger;
 class EnergonTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider getMaxBits
+     * @dataProvider getBitLengths
+     * @param int $bitLength
      */
-    public function testGeneratesRandomSet($maxBits)
+    public function testGeneratesRandomSet($bitLength)
     {
-        $set = Energon::generate(null, $maxBits);
+        $set = Energon::generate(null, $bitLength);
 
         $this->assertCount(3, $set);
         $this->assertInternalType('integer', $set[0], 'Unexpected type for prime number.');
@@ -21,19 +22,19 @@ class EnergonTest extends PHPUnit_Framework_TestCase
             '1',
             (new BigInteger($set[0]))
                 ->multiply(new BigInteger($set[1]))
-                ->bitwise_and(new BigInteger(pow(2, $maxBits) - 1))
+                ->bitwise_and(new BigInteger(pow(2, $bitLength) - 1))
                 ->toString(),
             sprintf(
-                'Prime: %s, Inverse: %s, Xor: %s, MaxBits: %s',
+                'Prime: %s, Inverse: %s, Xor: %s, Bit length: %s',
                 $set[0],
                 $set[1],
                 $set[2],
-                $maxBits
+                $bitLength
             )
         );
     }
 
-    public function getMaxBits()
+    public function getBitLengths()
     {
         return [
             [31],
@@ -46,9 +47,9 @@ class EnergonTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getAskedSetTestData
      */
-    public function testGeneratesAskedSet($maxBits, $prime, $expectedInverse)
+    public function testGeneratesAskedSet($bitLength, $prime, $expectedInverse)
     {
-        $set = Energon::generate($prime, $maxBits);
+        $set = Energon::generate($prime, $bitLength);
 
         $this->assertCount(3, $set);
         $this->assertInternalType('integer', $set[0], 'Unexpected type for prime number.');
@@ -73,7 +74,7 @@ class EnergonTest extends PHPUnit_Framework_TestCase
         $set = Energon::generate();
 
         $first = new BigInteger($set[0]);
-        $x = new BigInteger(Optimus::MAX_INT + 1);
+        $x = new BigInteger(pow(2, Optimus::DEFAULT_BIT_LENGTH));
 
         $this->assertTrue($first->isPrime());
         $this->assertEquals($first->modInverse($x)->toString(), $set[1]);
@@ -81,7 +82,8 @@ class EnergonTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidPrimeProvided()
     {
-        $this->setExpectedException('Jenssegers\Optimus\Exceptions\InvalidPrimeException', '2');
+        $this->expectException('Jenssegers\Optimus\Exceptions\InvalidPrimeException');
+        $this->expectExceptionMessage('2');
 
         Energon::generate(2);
     }
