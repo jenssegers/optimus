@@ -117,18 +117,35 @@ class OptimusTest extends PHPUnit_Framework_TestCase
      */
     public function testEncodeDecodeRandomNumbers($bitLength)
     {
-        $maxInt = pow(2, $bitLength);
+        $maxInt = pow(2, $bitLength)-1;
         list($prime, $inverse, $xor) = Energon::generate(null, $bitLength);
 
         $optimus = new Optimus($prime, $inverse, $xor, $bitLength);
 
         for ($i = 0; $i < 1000; $i++) {
             $id = rand(0, $maxInt);
+
             $encoded = $optimus->encode($id);
             $decoded = $optimus->decode($encoded);
 
-            $this->assertEquals($id, $decoded);
-            $this->assertNotEquals($id, $encoded);
+            $assertMsgDetails = sprintf(
+                'Prime: %s, Inverse: %s, Xor: %s, Bit length: %s, Value: %s',
+                $prime,
+                $inverse,
+                $xor,
+                $bitLength,
+                $id
+            );
+
+            $this->assertEquals(
+                $id,
+                $decoded,
+                "Encoded value $encoded has not decoded back to $id. ($assertMsgDetails)");
+            $this->assertNotEquals(
+                $id,
+                $encoded,
+                "Encoded value $encoded matches the original value."
+            );
         }
     }
 
@@ -136,6 +153,8 @@ class OptimusTest extends PHPUnit_Framework_TestCase
     {
         return [
             [31],
+            [62],
+            [48],
             [32],
             [24],
             [16]

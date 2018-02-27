@@ -116,12 +116,23 @@ class Optimus
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        switch ($this->mode) {
+        $valXored = (int) $value ^ $this->xor;
+
+        $doMode = $this->mode;
+
+        if ($doMode === self::MODE_NATIVE
+            && PHP_INT_SIZE == 8
+            && ($valXored * $this->inverse) > 9e18
+        ) {
+            $doMode = self::MODE_GMP;
+        }
+
+        switch ($doMode) {
             case static::MODE_GMP:
-                return gmp_intval(gmp_mul((int) $value ^ $this->xor, $this->inverse)) & $this->maxInt;
+                return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->maxInt;
 
             default:
-                return (((int) $value ^ $this->xor) * $this->inverse) & $this->maxInt;
+                return ($valXored * $this->inverse) & $this->maxInt;
         }
     }
 

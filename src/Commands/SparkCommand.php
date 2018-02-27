@@ -22,7 +22,7 @@ class SparkCommand extends Command
                 'bits',
                 'b',
                 InputOption::VALUE_REQUIRED,
-                'The number of bits used to obfuscate the integer. E.g. 16 bits will produce numbers in the range 1 to 65535.',
+                'The number of bits used to obfuscate the integer. E.g. 16 bits will produce numbers in the range 0 to 65535.',
                 Optimus::DEFAULT_BIT_LENGTH
             )->addArgument(
                'prime',
