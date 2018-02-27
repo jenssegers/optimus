@@ -82,8 +82,7 @@ class EnergonTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidPrimeProvided()
     {
-        $this->expectException('Jenssegers\Optimus\Exceptions\InvalidPrimeException');
-        $this->expectExceptionMessage('2');
+        $this->setExpectedException('Jenssegers\Optimus\Exceptions\InvalidPrimeException', '2');
 
         Energon::generate(2);
     }
