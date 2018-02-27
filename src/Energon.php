@@ -60,7 +60,7 @@ class Energon
     public static function generatePrime($bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
         $max = self::createMaxInt($bitLength);
-        $expForMin =  max(1,floor(log10($max->toString())) - 2);
+        $expForMin =  max(1, floor(log10($max->toString())) - 2);
         $min = new BigInteger(pow(10, $expForMin));
 
         return (int) $max->randomPrime($min, $max)->toString();
