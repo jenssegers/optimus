@@ -60,7 +60,7 @@ class Optimus
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
-        $this->maxInt = (int) pow(2, $bitLength)-1;
+        $this->maxInt = (int) pow(2, $bitLength) - 1;
 
         // Check which calculation mode should be used.
         $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
