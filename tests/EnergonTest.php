@@ -7,6 +7,25 @@ use phpseclib\Math\BigInteger;
 class EnergonTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @dataProvider getCalculateInverseTestData
+     * @param $bitLength
+     * @param $prime
+     * @param $expectedInverse
+     */
+    public function testCalculateInverseWithDifferentPrimeTypes($bitLength, $prime, $expectedInverse)
+    {
+        $this->assertSame($expectedInverse, Energon::calculateInverse($prime, $bitLength));
+    }
+
+    public function getCalculateInverseTestData()
+    {
+        return [
+            [31, 1580030173, 59260789],
+            [31, new BigInteger(1580030173), 59260789],
+        ];
+    }
+
+    /**
      * @dataProvider getBitLengths
      * @param int $bitLength
      */
