@@ -3,6 +3,7 @@
 namespace Jenssegers\Optimus;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 class Optimus
 {
@@ -12,7 +13,10 @@ class Optimus
      */
     const MAX_INT = 2147483647;
 
-    const DEFAULT_BIT_LENGTH = 31;
+    /**
+     * Default bit size for of the max integer value.
+     */
+    const DEFAULT_SIZE = 31;
 
     /**
      * @var string
@@ -47,26 +51,31 @@ class Optimus
     /**
      * @var int
      */
-    private $maxInt;
+    private $max;
 
     /**
      * @param int $prime
      * @param int $inverse
      * @param int $xor
-     * @param int $bitLength
+     * @param int $size
      */
-    public function __construct($prime, $inverse, $xor = 0, $bitLength = self::DEFAULT_BIT_LENGTH)
+    public function __construct($prime, $inverse, $xor = 0, $size = self::DEFAULT_SIZE)
     {
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
-        $this->maxInt = (int) pow(2, $bitLength) - 1;
+        $this->max = (int) pow(2, $size) - 1;
 
-        // Check which calculation mode should be used.
+        // 32 bit systems should use GMP.
         $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
 
-        if (($this->mode == static::MODE_GMP || $bitLength > 31) && !extension_loaded(static::MODE_GMP)) {
-            throw new \RuntimeException(
+        // For large numbers, we also need GMP.
+        if ($size > 31) {
+            $this->mode = static::MODE_GMP;
+        }
+
+        if ($this->mode == static::MODE_GMP && !extension_loaded(static::MODE_GMP)) {
+            throw new RuntimeException(
                 "The GNU Multiple Precision functions are required for calculations on your system."
             );
         }
@@ -76,7 +85,6 @@ class Optimus
      * Encode an integer.
      *
      * @param  int $value
-     *
      * @return int
      */
     public function encode($value)
@@ -96,10 +104,10 @@ class Optimus
 
         switch ($doMode) {
             case self::MODE_GMP:
-                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->maxInt) ^ $this->xor;
+                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
 
             default:
-                return (((int) $value * $this->prime) & $this->maxInt) ^ $this->xor;
+                return (((int) $value * $this->prime) & $this->max) ^ $this->xor;
         }
     }
 
@@ -107,7 +115,6 @@ class Optimus
      * Decode an integer.
      *
      * @param  int $value
-     *
      * @return int
      */
     public function decode($value)
@@ -129,10 +136,10 @@ class Optimus
 
         switch ($doMode) {
             case static::MODE_GMP:
-                return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->maxInt;
+                return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->max;
 
             default:
-                return ($valXored * $this->inverse) & $this->maxInt;
+                return ($valXored * $this->inverse) & $this->max;
         }
     }
 
@@ -144,7 +151,7 @@ class Optimus
     public function setMode($mode)
     {
         if (!in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
-            throw new InvalidArgumentException('Unkown mode: ' . $mode);
+            throw new InvalidArgumentException('Unknown mode: ' . $mode);
         }
 
         $this->mode = $mode;

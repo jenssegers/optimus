@@ -16,33 +16,32 @@ class Energon
     /**
      * @var int
      */
-    private $bitLength;
+    private $size;
 
     /**
      * @param int|null $prime
-     * @param int $bitLength
+     * @param int $size
      */
-    public function __construct($prime = null, $bitLength = Optimus::DEFAULT_BIT_LENGTH)
+    public function __construct($prime = null, $size = Optimus::DEFAULT_SIZE)
     {
         if (is_null($prime)) {
-            $prime = static::generatePrime($bitLength);
+            $prime = static::generatePrime($size);
         }
 
         $this->setPrime($prime);
-        $this->setBitLength($bitLength);
+        $this->setSize($size);
     }
 
     /**
      * Generates a set of numbers ready for use.
      *
      * @param int|null $prime
-     *
-     * @param int $bitLength
+     * @param int $size
      * @return array
      */
-    public static function generate($prime = null, $bitLength = Optimus::DEFAULT_BIT_LENGTH)
+    public static function generate($prime = null, $size = Optimus::DEFAULT_SIZE)
     {
-        $instance = new static($prime, $bitLength);
+        $instance = new static($prime, $size);
 
         return [
             $instance->getPrime(),
@@ -54,12 +53,12 @@ class Energon
     /**
      * Generate a random large prime.
      *
-     * @param int $bitLength
+     * @param int $size
      * @return int
      */
-    public static function generatePrime($bitLength = Optimus::DEFAULT_BIT_LENGTH)
+    public static function generatePrime($size = Optimus::DEFAULT_SIZE)
     {
-        $max = self::createMaxInt($bitLength);
+        $max = self::createMaxInt($size);
         $expForMin = max(1, floor(log10($max->toString())) - 2);
         $min = new BigInteger(pow(10, $expForMin));
 
@@ -69,18 +68,18 @@ class Energon
     /**
      * Calculate the modular multiplicative inverse of the prime number
      * @param int|BigInteger $prime
-     * @param int $bitLength
+     * @param int $size
      * @return int
      */
-    public static function calculateInverse($prime, $bitLength = Optimus::DEFAULT_BIT_LENGTH)
+    public static function calculateInverse($prime, $size = Optimus::DEFAULT_SIZE)
     {
         if (!$prime instanceof BigInteger) {
             $prime = new BigInteger($prime);
         }
 
-        $x = self::createMaxInt($bitLength)->add(new BigInteger(1));
+        $max = self::createMaxInt($size)->add(new BigInteger(1));
 
-        if (!$inverse = $prime->modInverse($x)) {
+        if (!$inverse = $prime->modInverse($max)) {
             throw new InvalidPrimeException($prime);
         }
 
@@ -90,13 +89,13 @@ class Energon
     /**
      * Generate a random large number.
      *
-     * @param int $bitLength
+     * @param int $size
      * @return int
      */
-    public static function generateRandomInteger($bitLength = Optimus::DEFAULT_BIT_LENGTH)
+    public static function generateRandomInteger($size = Optimus::DEFAULT_SIZE)
     {
         return (int) (new BigInteger(hexdec(bin2hex(Random::string(4)))))
-            ->bitwise_and(self::createMaxInt($bitLength))
+            ->bitwise_and(self::createMaxInt($size))
             ->toString();
     }
 
@@ -128,9 +127,12 @@ class Energon
         $this->prime = $prime;
     }
 
-    public function setBitLength($bits)
+    /**
+     * @param int $size
+     */
+    public function setSize($size)
     {
-        $this->bitLength = $bits;
+        $this->size = $size;
     }
 
     /**
@@ -140,7 +142,7 @@ class Energon
      */
     public function getInverse()
     {
-        return self::calculateInverse($this->prime, $this->bitLength);
+        return self::calculateInverse($this->prime, $this->size);
     }
 
     /**
@@ -150,15 +152,15 @@ class Energon
      */
     public function getRand()
     {
-        return static::generateRandomInteger($this->bitLength);
+        return static::generateRandomInteger($this->size);
     }
 
     /**
-     * @param int $bitLength
+     * @param int $size
      * @return BigInteger
      */
-    protected static function createMaxInt($bitLength)
+    protected static function createMaxInt($size)
     {
-        return (new BigInteger(pow(2, $bitLength)))->subtract(new BigInteger(1));
+        return (new BigInteger(pow(2, $size)))->subtract(new BigInteger(1));
     }
 }

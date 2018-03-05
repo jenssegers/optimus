@@ -93,7 +93,7 @@ class EnergonTest extends PHPUnit_Framework_TestCase
         $set = Energon::generate();
 
         $first = new BigInteger($set[0]);
-        $x = new BigInteger(pow(2, Optimus::DEFAULT_BIT_LENGTH));
+        $x = new BigInteger(pow(2, Optimus::DEFAULT_SIZE));
 
         $this->assertTrue($first->isPrime());
         $this->assertEquals($first->modInverse($x)->toString(), $set[1]);
