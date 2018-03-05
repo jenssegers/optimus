@@ -8,13 +8,16 @@ class Optimus
 {
     /**
      * @var int
+     * @deprecated The maximum integer is now configurable via the bit length.
      */
     const MAX_INT = 2147483647;
+
+    const DEFAULT_BIT_LENGTH = 31;
 
     /**
      * @var string
      */
-    private static $mode;
+    private $mode;
 
     /**
      * Use GMP extension functions.
@@ -42,19 +45,30 @@ class Optimus
     private $xor;
 
     /**
-     * @param int $prime
-     * @param int $xor
-     * @param int $inverse
+     * @var int
      */
-    public function __construct($prime, $inverse, $xor = 0)
+    private $maxInt;
+
+    /**
+     * @param int $prime
+     * @param int $inverse
+     * @param int $xor
+     * @param int $bitLength
+     */
+    public function __construct($prime, $inverse, $xor = 0, $bitLength = self::DEFAULT_BIT_LENGTH)
     {
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
+        $this->maxInt = (int) pow(2, $bitLength) - 1;
 
         // Check which calculation mode should be used.
-        if (static::$mode === null) {
-            static::$mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
+        $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
+
+        if (($this->mode == static::MODE_GMP || $bitLength > 31) && !extension_loaded(static::MODE_GMP)) {
+            throw new \RuntimeException(
+                "The GNU Multiple Precision functions are required for calculations on your system."
+            );
         }
     }
 
@@ -71,12 +85,21 @@ class Optimus
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        switch (static::$mode) {
+        $doMode = $this->mode;
+
+        if ($doMode === self::MODE_NATIVE
+            && PHP_INT_SIZE == 8
+            && ($value * $this->prime) > 9e18
+        ) {
+            $doMode = self::MODE_GMP;
+        }
+
+        switch ($doMode) {
             case self::MODE_GMP:
-                return (gmp_intval(gmp_mul($value, $this->prime)) & static::MAX_INT) ^ $this->xor;
+                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->maxInt) ^ $this->xor;
 
             default:
-                return (((int) $value * $this->prime) & static::MAX_INT) ^ $this->xor;
+                return (((int) $value * $this->prime) & $this->maxInt) ^ $this->xor;
         }
     }
 
@@ -93,12 +116,23 @@ class Optimus
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        switch (static::$mode) {
+        $valXored = (int) $value ^ $this->xor;
+
+        $doMode = $this->mode;
+
+        if ($doMode === self::MODE_NATIVE
+            && PHP_INT_SIZE == 8
+            && ($valXored * $this->inverse) > 9e18
+        ) {
+            $doMode = self::MODE_GMP;
+        }
+
+        switch ($doMode) {
             case static::MODE_GMP:
-                return gmp_intval(gmp_mul((int) $value ^ $this->xor, $this->inverse)) & static::MAX_INT;
+                return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->maxInt;
 
             default:
-                return (((int) $value ^ $this->xor) * $this->inverse) & static::MAX_INT;
+                return ($valXored * $this->inverse) & $this->maxInt;
         }
     }
 
@@ -113,6 +147,6 @@ class Optimus
             throw new InvalidArgumentException('Unkown mode: ' . $mode);
         }
 
-        static::$mode = $mode;
+        $this->mode = $mode;
     }
 }
