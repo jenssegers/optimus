@@ -3,16 +3,14 @@
 namespace Jenssegers\Optimus;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 class Optimus
 {
     /**
      * @var int
-     * @deprecated The maximum integer is now configurable via the bit length.
      */
     const MAX_INT = 2147483647;
-
-    const DEFAULT_BIT_LENGTH = 31;
 
     /**
      * @var string
@@ -47,28 +45,39 @@ class Optimus
     /**
      * @var int
      */
-    private $maxInt;
+    private $max;
 
     /**
      * @param int $prime
      * @param int $inverse
      * @param int $xor
-     * @param int $bitLength
+     * @param int $max
      */
-    public function __construct($prime, $inverse, $xor = 0, $bitLength = self::DEFAULT_BIT_LENGTH)
+    public function __construct($prime, $inverse, $xor = 0, $max = 2147483647)
     {
         $this->prime = (int) $prime;
         $this->inverse = (int) $inverse;
         $this->xor = (int) $xor;
-        $this->maxInt = (int) pow(2, $bitLength) - 1;
+        $this->max =  (int) $max;
 
-        // Check which calculation mode should be used.
+        // 32 bit systems should definitely use GMP.
         $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
 
-        if (($this->mode == static::MODE_GMP || $bitLength > 31) && !extension_loaded(static::MODE_GMP)) {
-            throw new \RuntimeException(
-                "The GNU Multiple Precision functions are required for calculations on your system."
+        // For larger numbers than 2147483647, GMP should be used as well.
+        if ($this->max > 2147483647) {
+            $this->mode = static::MODE_GMP;
+        }
+
+        // GMP is better at handling big numbers.
+        if ($this->mode === static::MODE_GMP && !extension_loaded(static::MODE_GMP)) {
+            throw new RuntimeException(
+                'The GNU Multiple Precision functions are required for calculations on your system.'
             );
+        }
+
+        // Always use GMP if available.
+        if (extension_loaded(static::MODE_GMP)) {
+            $this->mode = static::MODE_GMP;
         }
     }
 
@@ -85,21 +94,11 @@ class Optimus
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
-        $doMode = $this->mode;
-
-        if ($doMode === self::MODE_NATIVE
-            && PHP_INT_SIZE == 8
-            && ($value * $this->prime) > 9e18
-        ) {
-            $doMode = self::MODE_GMP;
-        }
-
-        switch ($doMode) {
+        switch ($this->mode) {
             case self::MODE_GMP:
-                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->maxInt) ^ $this->xor;
-
+                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
             default:
-                return (((int) $value * $this->prime) & $this->maxInt) ^ $this->xor;
+                return (((int) $value * $this->prime) & $this->max) ^ $this->xor;
         }
     }
 
@@ -120,19 +119,19 @@ class Optimus
 
         $doMode = $this->mode;
 
-        if ($doMode === self::MODE_NATIVE
-            && PHP_INT_SIZE == 8
-            && ($valXored * $this->inverse) > 9e18
-        ) {
-            $doMode = self::MODE_GMP;
-        }
+//        if ($doMode === self::MODE_NATIVE
+//            && PHP_INT_SIZE == 8
+//            && ($valXored * $this->inverse) > 9e18
+//        ) {
+//            $doMode = self::MODE_GMP;
+//        }
 
         switch ($doMode) {
             case static::MODE_GMP:
-                return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->maxInt;
+                return gmp_intval(gmp_mul($value ^ $this->xor, $this->inverse)) & $this->max;
 
             default:
-                return ($valXored * $this->inverse) & $this->maxInt;
+                return (($value ^ $this->xor) * $this->inverse) & $this->max;
         }
     }
 
@@ -144,7 +143,7 @@ class Optimus
     public function setMode($mode)
     {
         if (!in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
-            throw new InvalidArgumentException('Unkown mode: ' . $mode);
+            throw new InvalidArgumentException('Unknown mode: ' . $mode);
         }
 
         $this->mode = $mode;

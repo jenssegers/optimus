@@ -3,8 +3,9 @@
 use Jenssegers\Optimus\Energon;
 use Jenssegers\Optimus\Optimus;
 use phpseclib\Math\BigInteger;
+use PHPUnit\Framework\TestCase;
 
-class EnergonTest extends PHPUnit_Framework_TestCase
+class EnergonTest extends TestCase
 {
     /**
      * @dataProvider getCalculateInverseTestData
