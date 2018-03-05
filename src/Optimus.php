@@ -81,7 +81,7 @@ class Optimus
      */
     public function encode($value)
     {
-        if (! is_numeric($value)) {
+        if (!is_numeric($value)) {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
@@ -112,7 +112,7 @@ class Optimus
      */
     public function decode($value)
     {
-        if (! is_numeric($value)) {
+        if (!is_numeric($value)) {
             throw new InvalidArgumentException('Argument should be an integer');
         }
 
@@ -143,7 +143,7 @@ class Optimus
      */
     public function setMode($mode)
     {
-        if (! in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
+        if (!in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
             throw new InvalidArgumentException('Unkown mode: ' . $mode);
         }
 

@@ -60,7 +60,7 @@ class Energon
     public static function generatePrime($bitLength = Optimus::DEFAULT_BIT_LENGTH)
     {
         $max = self::createMaxInt($bitLength);
-        $expForMin =  max(1, floor(log10($max->toString())) - 2);
+        $expForMin = max(1, floor(log10($max->toString())) - 2);
         $min = new BigInteger(pow(10, $expForMin));
 
         return (int) $max->randomPrime($min, $max)->toString();
@@ -80,7 +80,7 @@ class Energon
 
         $x = self::createMaxInt($bitLength)->add(new BigInteger(1));
 
-        if (! $inverse = $prime->modInverse($x)) {
+        if (!$inverse = $prime->modInverse($x)) {
             throw new InvalidPrimeException($prime);
         }
 
@@ -117,11 +117,11 @@ class Energon
      */
     public function setPrime($prime)
     {
-        if (! $prime instanceof BigInteger) {
+        if (!$prime instanceof BigInteger) {
             $prime = new BigInteger($prime);
         }
 
-        if (! $prime->isPrime()) {
+        if (!$prime->isPrime()) {
             throw new InvalidPrimeException($prime);
         }
 
