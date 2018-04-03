@@ -4,8 +4,9 @@ namespace {
 
     use Jenssegers\Optimus\Energon;
     use Jenssegers\Optimus\Optimus;
+    use PHPUnit\Framework\TestCase;
 
-    class OptimusTest extends PHPUnit_Framework_TestCase
+    class OptimusTest extends TestCase
     {
         /**
          * @var Optimus
@@ -214,6 +215,13 @@ namespace {
             $prime = 10000019;
 
             new Optimus($prime, Energon::calculateInverse($prime, $lrgBitLength), 0, $lrgBitLength);
+        }
+
+        public function testSetModeShouldReturnInvalidArgumentException()
+        {
+            $this->setExpectedException('InvalidArgumentException');
+
+            $this->optimus->setMode('invalid_mode');
         }
     }
 }
