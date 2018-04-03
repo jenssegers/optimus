@@ -217,7 +217,7 @@ namespace {
             new Optimus($prime, Energon::calculateInverse($prime, $lrgBitLength), 0, $lrgBitLength);
         }
 
-        public function testSetModeShouldReturnInvalidArgumentException()
+        public function testSetModeShouldThrowInvalidArgumentException()
         {
             $this->setExpectedException('InvalidArgumentException');
 
