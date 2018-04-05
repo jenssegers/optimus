@@ -3,8 +3,9 @@
 use Jenssegers\Optimus\Energon;
 use Jenssegers\Optimus\Optimus;
 use phpseclib\Math\BigInteger;
+use PHPUnit\Framework\TestCase;
 
-class EnergonTest extends PHPUnit_Framework_TestCase
+class EnergonTest extends TestCase
 {
     /**
      * @dataProvider getCalculateInverseTestData
@@ -101,8 +102,17 @@ class EnergonTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidPrimeProvided()
     {
-        $this->setExpectedException('Jenssegers\Optimus\Exceptions\InvalidPrimeException', '2');
+        $this->setExpectedException(Jenssegers\Optimus\Exceptions\InvalidPrimeException::class, '2');
 
         Energon::generate(2);
+    }
+
+    public function testSetPrimeShouldThrowInvalidPrimeException()
+    {
+        $this->setExpectedException(Jenssegers\Optimus\Exceptions\InvalidPrimeException::class, '20');
+
+        $energon = new Energon();
+
+        $energon->setPrime(20);
     }
 }

@@ -4,8 +4,9 @@ namespace {
 
     use Jenssegers\Optimus\Energon;
     use Jenssegers\Optimus\Optimus;
+    use PHPUnit\Framework\TestCase;
 
-    class OptimusTest extends PHPUnit_Framework_TestCase
+    class OptimusTest extends TestCase
     {
         /**
          * @var Optimus
@@ -179,14 +180,14 @@ namespace {
 
         public function testEncodeBadStrings()
         {
-            $this->setExpectedException('InvalidArgumentException');
+            $this->setExpectedException(InvalidArgumentException::class);
 
             $this->optimus->encode('foo');
         }
 
         public function testDecodeBadStrings()
         {
-            $this->setExpectedException('InvalidArgumentException');
+            $this->setExpectedException(InvalidArgumentException::class);
 
             $this->optimus->decode('foo');
         }
@@ -207,13 +208,20 @@ namespace {
 
         public function testExceptionIfGmpRequiredButNotLoaded()
         {
-            $this->setExpectedException('RuntimeException');
+            $this->setExpectedException(RuntimeException::class);
 
             self::$gmpExtensionLoaded = false;
             $lrgBitLength = 32; // GMP is required for 32bit numbers.
             $prime = 10000019;
 
             new Optimus($prime, Energon::calculateInverse($prime, $lrgBitLength), 0, $lrgBitLength);
+        }
+
+        public function testSetModeShouldThrowInvalidArgumentException()
+        {
+            $this->setExpectedException(InvalidArgumentException::class);
+
+            $this->optimus->setMode('invalid_mode');
         }
     }
 }
