@@ -102,14 +102,14 @@ class EnergonTest extends TestCase
 
     public function testInvalidPrimeProvided()
     {
-        $this->setExpectedException('Jenssegers\Optimus\Exceptions\InvalidPrimeException', '2');
+        $this->setExpectedException(Jenssegers\Optimus\Exceptions\InvalidPrimeException::class, '2');
 
         Energon::generate(2);
     }
 
     public function testSetPrimeShouldThrowInvalidPrimeException()
     {
-        $this->setExpectedException('Jenssegers\Optimus\Exceptions\InvalidPrimeException', '20');
+        $this->setExpectedException(Jenssegers\Optimus\Exceptions\InvalidPrimeException::class, '20');
 
         $energon = new Energon();
 
