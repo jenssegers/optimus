@@ -142,3 +142,5 @@ Laravel Optimus with multiple connections provided by the [cybercog/laravel-opti
 An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](https://packagist.org/packages/jaam/silex-optimus-provider) package.
 
 An integration with Laravel is provided by the [elfsundae/laravel-hashid](https://github.com/ElfSundae/laravel-hashid) package.
+
+A PSR-15 middleware provided by the [icanhazstring/optimus-middleware](https://github.com/icanhazstring/optimus-middleware) package.
