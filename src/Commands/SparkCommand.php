@@ -63,37 +63,37 @@ class SparkCommand extends Command
             $output->writeln('<error>Invalid prime number</>');
 
             return 1;
-		}
+        }
 
-		switch ($input->getOption('format')) {
-			case 'env':
-				$output->writeln('OPTIMUS_PRIME=' . $prime);
-				$output->writeln('OPTIMUS_INVERSE=' . $inverse);
-				$output->writeln('OPTIMUS_RANDOM=' . $rand);
-				$output->writeln('OPTIMUS_BITLENGTH=' . $bitLength);
-				break;
-			case 'htaccess':
-				$output->writeln('SetEnv OPTIMUS_PRIME ' . $prime);
-				$output->writeln('SetEnv OPTIMUS_INVERSE ' . $inverse);
-				$output->writeln('SetEnv OPTIMUS_RANDOM ' . $rand);
-				$output->writeln('SetEnv OPTIMUS_BITLENGTH ' . $bitLength);
-				break;
-			default:
-				$output->writeln('Prime: ' . $prime);
-				$output->writeln('Inverse: ' . $inverse);
-				$output->writeln('Random: ' . $rand);
-				$output->writeln('Bit length: ' . $bitLength);
-				$output->writeln('');
-				$output->writeln(
-					sprintf(
-						'    new Optimus(%s, %s, %s, %s);',
-						$prime,
-						$inverse,
-						$rand,
-						$bitLength
-					)
-				);
-				break;
-		}
+        switch ($input->getOption('format')) {
+            case 'env':
+                $output->writeln('OPTIMUS_PRIME=' . $prime);
+                $output->writeln('OPTIMUS_INVERSE=' . $inverse);
+                $output->writeln('OPTIMUS_RANDOM=' . $rand);
+                $output->writeln('OPTIMUS_BITLENGTH=' . $bitLength);
+                break;
+            case 'htaccess':
+                $output->writeln('SetEnv OPTIMUS_PRIME ' . $prime);
+                $output->writeln('SetEnv OPTIMUS_INVERSE ' . $inverse);
+                $output->writeln('SetEnv OPTIMUS_RANDOM ' . $rand);
+                $output->writeln('SetEnv OPTIMUS_BITLENGTH ' . $bitLength);
+                break;
+            default:
+                $output->writeln('Prime: ' . $prime);
+                $output->writeln('Inverse: ' . $inverse);
+                $output->writeln('Random: ' . $rand);
+                $output->writeln('Bit length: ' . $bitLength);
+                $output->writeln('');
+                $output->writeln(
+                    sprintf(
+                        '    new Optimus(%s, %s, %s, %s);',
+                        $prime,
+                        $inverse,
+                        $rand,
+                        $bitLength
+                    )
+                );
+                break;
+        }
     }
 }
