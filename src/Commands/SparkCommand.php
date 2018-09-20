@@ -24,6 +24,12 @@ class SparkCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'The number of bits used to obfuscate the integer. E.g. 16 bits will produce numbers in the range 0 to 65535.',
                 Optimus::DEFAULT_SIZE
+            )->addOption(
+                'format',
+                'f',
+                InputOption::VALUE_OPTIONAL,
+                'The output format. Tip: Use --format=env to directly generate env variables.',
+                'txt'
             )->addArgument(
                 'prime',
                 InputArgument::OPTIONAL,
@@ -57,21 +63,31 @@ class SparkCommand extends Command
             $output->writeln('<error>Invalid prime number</>');
 
             return 1;
-        }
+		}
 
-        $output->writeln('Prime: ' . $prime);
-        $output->writeln('Inverse: ' . $inverse);
-        $output->writeln('Random: ' . $rand);
-        $output->writeln('Bit length: ' . $bitLength);
-        $output->writeln('');
-        $output->writeln(
-            sprintf(
-                '    new Optimus(%s, %s, %s, %s);',
-                $prime,
-                $inverse,
-                $rand,
-                $bitLength
-            )
-        );
+		switch ($input->getOption('format')) {
+			case 'env':
+				$output->writeln('OPTIMUS_PRIME=' . $prime);
+				$output->writeln('OPTIMUS_INVERSE=' . $inverse);
+				$output->writeln('OPTIMUS_RANDOM=' . $rand);
+				$output->writeln('OPTIMUS_BITLENGTH=' . $bitLength);
+				break;
+			default:
+				$output->writeln('Prime: ' . $prime);
+				$output->writeln('Inverse: ' . $inverse);
+				$output->writeln('Random: ' . $rand);
+				$output->writeln('Bit length: ' . $bitLength);
+				$output->writeln('');
+				$output->writeln(
+					sprintf(
+						'    new Optimus(%s, %s, %s, %s);',
+						$prime,
+						$inverse,
+						$rand,
+						$bitLength
+					)
+				);
+				break;
+		}
     }
 }
