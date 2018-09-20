@@ -72,6 +72,12 @@ class SparkCommand extends Command
 				$output->writeln('OPTIMUS_RANDOM=' . $rand);
 				$output->writeln('OPTIMUS_BITLENGTH=' . $bitLength);
 				break;
+			case 'htaccess':
+				$output->writeln('SetEnv OPTIMUS_PRIME ' . $prime);
+				$output->writeln('SetEnv OPTIMUS_INVERSE ' . $inverse);
+				$output->writeln('SetEnv OPTIMUS_RANDOM ' . $rand);
+				$output->writeln('SetEnv OPTIMUS_BITLENGTH ' . $bitLength);
+				break;
 			default:
 				$output->writeln('Prime: ' . $prime);
 				$output->writeln('Inverse: ' . $inverse);
