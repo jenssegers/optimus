@@ -126,7 +126,7 @@ class UserController extends Controller
 {
     public function show($id, Optimus $optimus)
     {
-        $id = $optimus->decode($id));
+        $id = $optimus->decode($id);
     }
 }
 ```
