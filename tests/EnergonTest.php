@@ -1,6 +1,9 @@
 <?php
 
+namespace Jenssegers\Optimus\Tests;
+
 use Jenssegers\Optimus\Energon;
+use Jenssegers\Optimus\Exceptions\InvalidPrimeException;
 use Jenssegers\Optimus\Optimus;
 use phpseclib\Math\BigInteger;
 use PHPUnit\Framework\TestCase;
@@ -9,11 +12,8 @@ class EnergonTest extends TestCase
 {
     /**
      * @dataProvider getCalculateInverseTestData
-     * @param $bitLength
-     * @param $prime
-     * @param $expectedInverse
      */
-    public function testCalculateInverseWithDifferentPrimeTypes($bitLength, $prime, $expectedInverse)
+    public function testCalculateInverseWithDifferentPrimeTypes(int $bitLength, int $prime, int $expectedInverse)
     {
         $this->assertSame($expectedInverse, Energon::calculateInverse($prime, $bitLength));
     }
@@ -22,15 +22,13 @@ class EnergonTest extends TestCase
     {
         return [
             [31, 1580030173, 59260789],
-            [31, new BigInteger(1580030173), 59260789],
         ];
     }
 
     /**
      * @dataProvider getBitLengths
-     * @param int $bitLength
      */
-    public function testGeneratesRandomSet($bitLength)
+    public function testGeneratesRandomSet(int $bitLength)
     {
         $set = Energon::generate(null, $bitLength);
 
@@ -42,7 +40,7 @@ class EnergonTest extends TestCase
             '1',
             (new BigInteger($set[0]))
                 ->multiply(new BigInteger($set[1]))
-                ->bitwise_and(new BigInteger(pow(2, $bitLength) - 1))
+                ->bitwise_and(new BigInteger((2 ** $bitLength) - 1))
                 ->toString(),
             sprintf(
                 'Prime: %s, Inverse: %s, Xor: %s, Bit length: %s',
@@ -54,7 +52,7 @@ class EnergonTest extends TestCase
         );
     }
 
-    public function getBitLengths()
+    public function getBitLengths(): array
     {
         return [
             [31],
@@ -67,7 +65,7 @@ class EnergonTest extends TestCase
     /**
      * @dataProvider getAskedSetTestData
      */
-    public function testGeneratesAskedSet($bitLength, $prime, $expectedInverse)
+    public function testGeneratesAskedSet(int $bitLength, int $prime, int $expectedInverse)
     {
         $set = Energon::generate($prime, $bitLength);
 
@@ -79,13 +77,13 @@ class EnergonTest extends TestCase
         $this->assertEquals($expectedInverse, $set[1], 'Unexpected inverse number.');
     }
 
-    public function getAskedSetTestData()
+    public function getAskedSetTestData(): array
     {
         return [
             [31, 1580030173, 59260789],
             [32, 1580030173, 59260789],
             [24, 12105601, 15698049],
-            [16, 1588507, 54547]
+            [16, 1588507, 54547],
         ];
     }
 
@@ -94,7 +92,7 @@ class EnergonTest extends TestCase
         $set = Energon::generate();
 
         $first = new BigInteger($set[0]);
-        $x = new BigInteger(pow(2, Optimus::DEFAULT_SIZE));
+        $x = new BigInteger(2 ** Optimus::DEFAULT_SIZE);
 
         $this->assertTrue($first->isPrime());
         $this->assertEquals($first->modInverse($x)->toString(), $set[1]);
@@ -102,17 +100,16 @@ class EnergonTest extends TestCase
 
     public function testInvalidPrimeProvided()
     {
-        $this->setExpectedException(Jenssegers\Optimus\Exceptions\InvalidPrimeException::class, '2');
+        $this->expectException(InvalidPrimeException::class);
 
         Energon::generate(2);
     }
 
     public function testSetPrimeShouldThrowInvalidPrimeException()
     {
-        $this->setExpectedException(Jenssegers\Optimus\Exceptions\InvalidPrimeException::class, '20');
+        $this->expectException(InvalidPrimeException::class);
 
         $energon = new Energon();
-
         $energon->setPrime(20);
     }
 }

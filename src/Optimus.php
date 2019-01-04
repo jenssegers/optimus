@@ -53,18 +53,12 @@ class Optimus
      */
     private $max;
 
-    /**
-     * @param int $prime
-     * @param int $inverse
-     * @param int $xor
-     * @param int $size
-     */
-    public function __construct($prime, $inverse, $xor = 0, $size = self::DEFAULT_SIZE)
+    public function __construct(int $prime, int $inverse, int $xor = 0, int $size = self::DEFAULT_SIZE)
     {
-        $this->prime = (int) $prime;
-        $this->inverse = (int) $inverse;
-        $this->xor = (int) $xor;
-        $this->max = (int) pow(2, $size) - 1;
+        $this->prime = $prime;
+        $this->inverse = $inverse;
+        $this->xor = $xor;
+        $this->max = 2 ** $size - 1;
 
         // 32 bit systems should use GMP.
         $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
@@ -74,81 +68,52 @@ class Optimus
             $this->mode = static::MODE_GMP;
         }
 
-        if ($this->mode == static::MODE_GMP && !extension_loaded(static::MODE_GMP)) {
+        if ($this->mode === static::MODE_GMP && !extension_loaded('gmp')) {
             throw new RuntimeException(
-                "The GNU Multiple Precision functions are required for calculations on your system."
+                'The GNU Multiple Precision functions are required for calculations on your system.'
             );
         }
     }
 
-    /**
-     * Encode an integer.
-     *
-     * @param  int $value
-     * @return int
-     */
-    public function encode($value)
+    public function encode(int $value): int
     {
-        if (!is_numeric($value)) {
-            throw new InvalidArgumentException('Argument should be an integer');
-        }
-
         $doMode = $this->mode;
 
         if ($doMode === self::MODE_NATIVE
-            && PHP_INT_SIZE == 8
+            && PHP_INT_SIZE === 8
             && ($value * $this->prime) > 9e18
         ) {
             $doMode = self::MODE_GMP;
         }
 
-        switch ($doMode) {
-            case self::MODE_GMP:
-                return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
-
-            default:
-                return (((int) $value * $this->prime) & $this->max) ^ $this->xor;
+        if ($doMode === self::MODE_GMP) {
+            return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
         }
+
+        return (($value * $this->prime) & $this->max) ^ $this->xor;
     }
 
-    /**
-     * Decode an integer.
-     *
-     * @param  int $value
-     * @return int
-     */
-    public function decode($value)
+    public function decode(int $value): int
     {
-        if (!is_numeric($value)) {
-            throw new InvalidArgumentException('Argument should be an integer');
-        }
-
-        $valXored = (int) $value ^ $this->xor;
+        $valXored = $value ^ $this->xor;
 
         $doMode = $this->mode;
 
         if ($doMode === self::MODE_NATIVE
-            && PHP_INT_SIZE == 8
+            && PHP_INT_SIZE === 8
             && ($valXored * $this->inverse) > 9e18
         ) {
             $doMode = self::MODE_GMP;
         }
 
-        switch ($doMode) {
-            case static::MODE_GMP:
-                return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->max;
-
-            default:
-                return ($valXored * $this->inverse) & $this->max;
+        if ($doMode === static::MODE_GMP) {
+            return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->max;
         }
+
+        return ($valXored * $this->inverse) & $this->max;
     }
 
-    /**
-     * Set the internal calculation mode (mainly used for testing).
-     *
-     * @param string $mode
-     */
-    public function setMode($mode)
+    public function setMode(string $mode)
     {
         if (!in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
             throw new InvalidArgumentException('Unknown mode: ' . $mode);
