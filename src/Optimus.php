@@ -2,122 +2,58 @@
 
 namespace Jenssegers\Optimus;
 
-use InvalidArgumentException;
+use phpseclib\Math\BigInteger;
 
 class Optimus
 {
-    /**
-     * @var int
-     * @deprecated The maximum integer is now configurable via the bit length.
-     */
-    const MAX_INT = 2147483647;
-
     /**
      * Default bit size for of the max integer value.
      */
     const DEFAULT_SIZE = 31;
 
     /**
-     * @var string
-     */
-    private $mode;
-
-    /**
-     * Use GMP extension functions.
-     */
-    const MODE_GMP = 'gmp';
-
-    /**
-     * Use native PHP implementation.
-     */
-    const MODE_NATIVE = 'native';
-
-    /**
-     * @var int
+     * @var BigInteger
      */
     private $prime;
 
     /**
-     * @var int
+     * @var BigInteger
      */
     private $inverse;
 
     /**
-     * @var int
+     * @var BigInteger
      */
     private $xor;
 
     /**
-     * @var int
+     * @var BigInteger
      */
     private $max;
 
     public function __construct(int $prime, int $inverse, int $xor = 0, int $size = self::DEFAULT_SIZE)
     {
-        $this->prime = $prime;
-        $this->inverse = $inverse;
-        $this->xor = $xor;
-        $this->max = 2 ** $size - 1;
-
-        $this->detectCalculationMode();
-    }
-
-    private function detectCalculationMode()
-    {
-        // 32 bit systems should use GMP.
-        $this->setMode(PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE);
+        $this->prime = new BigInteger($prime);
+        $this->inverse = new BigInteger($inverse);
+        $this->xor = new BigInteger($xor);
+        $this->max = new BigInteger(2 ** $size - 1);
     }
 
     public function encode(int $value): int
     {
-        $doMode = $this->mode;
-
-        if ($doMode === self::MODE_NATIVE
-            && PHP_INT_SIZE === 8
-            && ($value * $this->prime) > 9e18
-        ) {
-            $doMode = self::MODE_GMP;
-        }
-
-        if ($doMode === self::MODE_GMP) {
-            return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
-        }
-
-        return (($value * $this->prime) & $this->max) ^ $this->xor;
+        return (int) (new BigInteger($value))
+            ->multiply($this->prime)
+            ->bitwise_and($this->max)
+            ->bitwise_xor($this->xor)
+            ->toString();
     }
 
     public function decode(int $value): int
     {
-        $valXored = $value ^ $this->xor;
-
-        $doMode = $this->mode;
-
-        if ($doMode === self::MODE_NATIVE
-            && PHP_INT_SIZE === 8
-            && ($valXored * $this->inverse) > 9e18
-        ) {
-            $doMode = self::MODE_GMP;
-        }
-
-        if ($doMode === static::MODE_GMP) {
-            return gmp_intval(gmp_mul($valXored, $this->inverse)) & $this->max;
-        }
-
-        return ($valXored * $this->inverse) & $this->max;
-    }
-
-    public function setMode(string $mode)
-    {
-        if (!in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
-            throw new InvalidArgumentException('Unknown mode: ' . $mode);
-        }
-
-        if ($mode === static::MODE_GMP && !extension_loaded('gmp')) {
-            throw new InvalidArgumentException(
-                'The GNU Multiple Precision functions are required for calculations on your system.'
-            );
-        }
-
-        $this->mode = $mode;
+        return (int) (new BigInteger($value))
+            ->bitwise_xor($this->xor)
+            ->multiply($this->inverse)
+            ->bitwise_and($this->max)
+            ->toString();
     }
 }
