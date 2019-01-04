@@ -10,17 +10,6 @@ use PHPUnit\Framework\TestCase;
 class OptimusTest extends TestCase
 {
     /**
-     * @var Optimus
-     */
-    private $optimus;
-
-    public function setUp()
-    {
-        list($prime, $inverse, $xor) = Energon::generate();
-        $this->optimus = new Optimus($prime, $inverse, $xor);
-    }
-
-    /**
      * @dataProvider getBitLengthTestData
      */
     public function testEncodeDecodeRandomNumbers(int $bitLength)
@@ -73,21 +62,50 @@ class OptimusTest extends TestCase
 
     public function testEncodeStrings()
     {
-        $this->assertEquals($this->optimus->encode(20), $this->optimus->encode('20'));
-        $this->assertEquals($this->optimus->decode(1440713122), $this->optimus->decode('1440713122'));
+        list($prime, $inverse, $xor) = Energon::generate();
+        $optimus = new Optimus($prime, $inverse, $xor);
+
+        $this->assertEquals($optimus->encode(20), $optimus->encode('20'));
+        $this->assertEquals($optimus->decode(1440713122), $optimus->decode('1440713122'));
     }
 
-    public function testGmpMode()
+    /**
+     * @dataProvider getBitLengthTestData
+     */
+    public function testGmpMode(int $bitLength)
     {
-        $this->optimus->setMode(Optimus::MODE_GMP);
+        $maxInt = (2 ** $bitLength) - 1;
+        list($prime, $inverse, $xor) = Energon::generate(null, $bitLength);
+
+        $optimus = new Optimus($prime, $inverse, $xor, $bitLength);
+        $optimus->setMode(Optimus::MODE_GMP);
 
         for ($i = 0; $i < 1000; $i++) {
-            $id = random_int(0, Optimus::MAX_INT);
-            $encoded = $this->optimus->encode($id);
-            $decoded = $this->optimus->decode($encoded);
+            $id = random_int(0, $maxInt);
 
-            $this->assertEquals($id, $decoded);
-            $this->assertNotEquals($id, $encoded);
+            $encoded = $optimus->encode($id);
+            $decoded = $optimus->decode($encoded);
+
+            $assertMsgDetails = sprintf(
+                'Prime: %s, Inverse: %s, Xor: %s, Bit length: %s, Value: %s',
+                $prime,
+                $inverse,
+                $xor,
+                $bitLength,
+                $id
+            );
+
+            $this->assertEquals(
+                $id,
+                $decoded,
+                "Encoded value $encoded has not decoded back to $id. ($assertMsgDetails)"
+            );
+
+            $this->assertNotEquals(
+                $id,
+                $encoded,
+                "Encoded value $encoded matches the original value."
+            );
         }
     }
 
@@ -95,6 +113,9 @@ class OptimusTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->optimus->setMode('invalid_mode');
+        list($prime, $inverse, $xor) = Energon::generate();
+        $optimus = new Optimus($prime, $inverse, $xor);
+
+        $optimus->setMode('invalid_mode');
     }
 }
