@@ -3,7 +3,6 @@
 namespace Jenssegers\Optimus;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 class Optimus
 {
@@ -60,19 +59,13 @@ class Optimus
         $this->xor = $xor;
         $this->max = 2 ** $size - 1;
 
+        $this->detectCalculationMode();
+    }
+
+    private function detectCalculationMode()
+    {
         // 32 bit systems should use GMP.
-        $this->mode = PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE;
-
-        // For large numbers, we also need GMP.
-        if ($size > 31) {
-            $this->mode = static::MODE_GMP;
-        }
-
-        if ($this->mode === static::MODE_GMP && !extension_loaded('gmp')) {
-            throw new RuntimeException(
-                'The GNU Multiple Precision functions are required for calculations on your system.'
-            );
-        }
+        $this->setMode(PHP_INT_SIZE === 4 ? static::MODE_GMP : static::MODE_NATIVE);
     }
 
     public function encode(int $value): int
@@ -117,6 +110,12 @@ class Optimus
     {
         if (!in_array($mode, [static::MODE_GMP, static::MODE_NATIVE])) {
             throw new InvalidArgumentException('Unknown mode: ' . $mode);
+        }
+
+        if ($mode === static::MODE_GMP && !extension_loaded('gmp')) {
+            throw new InvalidArgumentException(
+                'The GNU Multiple Precision functions are required for calculations on your system.'
+            );
         }
 
         $this->mode = $mode;
