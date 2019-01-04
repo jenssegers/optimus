@@ -28,8 +28,5 @@
     "suggest": {
         "ext-gmp": "Required for 32bit systems"
     },
-    "scripts": {
-        "build": "rm optimus && ./vendor/bin/box build && mv optimus.phar optimus && chmod +x optimus"
-    },
     "bin": ["optimus"]
 }
