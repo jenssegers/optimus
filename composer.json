@@ -14,7 +14,7 @@
         "php": ">=7.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpunit": "^6.0|^7.0",
         "phpseclib/phpseclib": "^2.0",
         "symfony/console": "^3.0|^4.0",
         "php-coveralls/php-coveralls": "^2.1",
