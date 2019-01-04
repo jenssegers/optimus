@@ -18,17 +18,3 @@ script:
 
 after_success:
   - php vendor/bin/coveralls -v
-
-before_deploy:
-  - php -d phar.readonly=false vendor/bin/box build && mv optimus.phar optimus
-
-deploy:
-  provider: releases
-  api_key:
-    secure: $GITHUB_TOKEN
-  file_glob: true
-  file:
-    - optimus
-  skip_cleanup: true
-  on:
-    tags: true
