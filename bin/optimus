@@ -1,7 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        require_once $file;
+        break;
+    }
+}
 
 use Jenssegers\Optimus\Commands\SparkCommand;
 use Symfony\Component\Console\Application;
