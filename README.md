@@ -1,6 +1,7 @@
 Optimus id transformation
 =========================
 
+[![Financial Contributors on Open Collective](https://opencollective.com/jenssegersoptimus/all/badge.svg?label=financial+contributors)](https://opencollective.com/jenssegersoptimus) 
 [![Latest Stable Version](http://img.shields.io/github/release/jenssegers/optimus.svg)](https://packagist.org/packages/jenssegers/optimus) [![Build Status](http://img.shields.io/travis/jenssegers/optimus.svg)](https://travis-ci.org/jenssegers/optimus) [![Coverage Status](http://img.shields.io/coveralls/jenssegers/optimus.svg)](https://coveralls.io/r/jenssegers/optimus?branch=master)
 
 
@@ -144,3 +145,33 @@ An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](htt
 An integration with Laravel is provided by the [elfsundae/laravel-hashid](https://github.com/ElfSundae/laravel-hashid) package.
 
 A PSR-15 middleware provided by the [icanhazstring/optimus-middleware](https://github.com/icanhazstring/optimus-middleware) package.
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/jenssegers/optimus/graphs/contributors"><img src="https://opencollective.com/jenssegersoptimus/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/jenssegersoptimus/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/jenssegersoptimus"><img src="https://opencollective.com/jenssegersoptimus/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/jenssegersoptimus/contribute)]
+
+<a href="https://opencollective.com/jenssegersoptimus/organization/0/website"><img src="https://opencollective.com/jenssegersoptimus/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/1/website"><img src="https://opencollective.com/jenssegersoptimus/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/2/website"><img src="https://opencollective.com/jenssegersoptimus/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/3/website"><img src="https://opencollective.com/jenssegersoptimus/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/4/website"><img src="https://opencollective.com/jenssegersoptimus/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/5/website"><img src="https://opencollective.com/jenssegersoptimus/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/6/website"><img src="https://opencollective.com/jenssegersoptimus/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/7/website"><img src="https://opencollective.com/jenssegersoptimus/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/8/website"><img src="https://opencollective.com/jenssegersoptimus/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/jenssegersoptimus/organization/9/website"><img src="https://opencollective.com/jenssegersoptimus/organization/9/avatar.svg"></a>
