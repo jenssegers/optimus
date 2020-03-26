@@ -144,3 +144,7 @@ An integration with Silex 2 is provided by the [jaam/silex-optimus-provider](htt
 An integration with Laravel is provided by the [elfsundae/laravel-hashid](https://github.com/ElfSundae/laravel-hashid) package.
 
 A PSR-15 middleware provided by the [icanhazstring/optimus-middleware](https://github.com/icanhazstring/optimus-middleware) package.
+
+## Security contact information
+
+To report a security vulnerability, follow [these steps](https://tidelift.com/security).
