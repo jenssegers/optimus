@@ -22,9 +22,9 @@ composer require jenssegers/optimus
 If you will be running your code on a 32 bit system or will be working with large prime numbers it is suggested that you install the [GMP extension](http://php.net/manual/en/book.gmp.php). For debian/ubuntu you can install the extension with one of these commands:
 
 ```
-apt-get install php7.0-gmp
-apt-get install php7.1-gmp
 apt-get install php7.2-gmp
+apt-get install php7.3-gmp
+apt-get install php7.4-gmp
 ```
 
 Usage
