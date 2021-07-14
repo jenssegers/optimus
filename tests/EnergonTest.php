@@ -5,7 +5,7 @@ namespace Jenssegers\Optimus\Tests;
 use Jenssegers\Optimus\Energon;
 use Jenssegers\Optimus\Exceptions\InvalidPrimeException;
 use Jenssegers\Optimus\Optimus;
-use phpseclib\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 use PHPUnit\Framework\TestCase;
 
 class EnergonTest extends TestCase
@@ -102,7 +102,7 @@ class EnergonTest extends TestCase
     {
         $this->expectException(InvalidPrimeException::class);
 
-        Energon::generate(2);
+        Energon::generate(4);
     }
 
     public function testSetPrimeShouldThrowInvalidPrimeException()
