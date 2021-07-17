@@ -3,8 +3,8 @@
 namespace Jenssegers\Optimus;
 
 use Jenssegers\Optimus\Exceptions\InvalidPrimeException;
-use phpseclib\Crypt\Random;
-use phpseclib\Math\BigInteger;
+use phpseclib3\Crypt\Random;
+use phpseclib3\Math\BigInteger;
 
 class Energon
 {
@@ -37,11 +37,7 @@ class Energon
 
     public static function generatePrime(int $size = Optimus::DEFAULT_SIZE): int
     {
-        $max = self::createMaxInt($size);
-        $expForMin = max(1, floor(log10($max->toString())) - 2);
-        $min = new BigInteger(10 ** $expForMin);
-
-        return (int) $max->randomPrime($min, $max)->toString();
+        return (int) BigInteger::randomPrime($size)->toString();
     }
 
     public static function calculateInverse(int $prime, int $size = Optimus::DEFAULT_SIZE): int
