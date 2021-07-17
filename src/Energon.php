@@ -90,6 +90,6 @@ class Energon
 
     protected static function createMaxInt(int $size): BigInteger
     {
-        return (new BigInteger(2 ** $size))->subtract(new BigInteger(1));
+        return (new BigInteger(1))->bitwise_leftShift($size)->subtract(new BigInteger(1));
     }
 }
