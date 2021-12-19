@@ -1,7 +1,10 @@
 Optimus id transformation
 =========================
 
-[![Latest Stable Version](http://img.shields.io/github/release/jenssegers/optimus.svg)](https://packagist.org/packages/jenssegers/optimus) [![Build Status](http://img.shields.io/travis/jenssegers/optimus.svg)](https://travis-ci.org/jenssegers/optimus) [![Coverage Status](http://img.shields.io/coveralls/jenssegers/optimus.svg)](https://coveralls.io/r/jenssegers/optimus?branch=master)
+[![Packagist](https://badgen.net/packagist/v/jenssegers/optimus)](https://packagist.org/packages/jenssegers/optimus)
+[![Downloads](https://badgen.net/packagist/dt/jenssegers/optimus)](https://packagist.org/packages/jenssegers/optimus/stats)
+[![Build](https://github.com/jenssegers/optimus/workflows/tests/badge.svg)](https://github.com/jenssegers/optimus/actions) 
+[![Coverage](http://img.shields.io/coveralls/jenssegers/optimus.svg)](https://coveralls.io/r/jenssegers/optimus?branch=master)
 
 
 With this library, you can transform your internal id's to obfuscated integers based on Knuth's integer hash. It is similar to Hashids, but will generate integers instead of random strings. It is also super fast.
@@ -15,13 +18,13 @@ Installation
 
 Install using composer:
 
-```
+```bash
 composer require jenssegers/optimus
 ```
 
 If you will be running your code on a 32 bit system or will be working with large prime numbers it is suggested that you install the [GMP extension](http://php.net/manual/en/book.gmp.php). For debian/ubuntu you can install the extension with one of these commands:
 
-```
+```bash
 apt-get install php7.0-gmp
 apt-get install php7.1-gmp
 apt-get install php7.2-gmp
@@ -38,7 +41,7 @@ To get started you will need 3 things;
 
 Luckily for you, I have included a console command that can do all of this for you. To get started, just run the following command:
 
-```
+```bash
 > php vendor/bin/optimus spark
 
 Prime: 2123809381
@@ -48,7 +51,7 @@ Random: 146808189
 
 If you prefer to choose your own prime number (from [this list](http://primes.utm.edu/lists/small/millions/) for example), you can pass it to the command to calculate the remaining numbers:
 
-```
+```bash
 > php vendor/bin/optimus spark 1580030173
 
 Prime: 1580030173
