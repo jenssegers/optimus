@@ -32,5 +32,12 @@
     "suggest": {
         "ext-gmp": "Required for 32bit systems"
     },
-    "bin": ["bin/optimus"]
+    "bin": ["bin/optimus"],
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --testdox --color=always"
+    }
 }
