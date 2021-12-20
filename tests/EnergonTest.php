@@ -33,9 +33,9 @@ class EnergonTest extends TestCase
         $set = Energon::generate(null, $bitLength);
 
         $this->assertCount(3, $set);
-        $this->assertInternalType('integer', $set[0], 'Unexpected type for prime number.');
-        $this->assertInternalType('integer', $set[1], 'Unexpected type for inverse number.');
-        $this->assertInternalType('integer', $set[2], 'Unexpected type for Xor.');
+        $this->assertIsInt($set[0], 'Unexpected type for prime number.');
+        $this->assertIsInt($set[1], 'Unexpected type for inverse number.');
+        $this->assertIsInt($set[2], 'Unexpected type for Xor.');
         $this->assertSame(
             '1',
             (new BigInteger($set[0]))
@@ -70,9 +70,9 @@ class EnergonTest extends TestCase
         $set = Energon::generate($prime, $bitLength);
 
         $this->assertCount(3, $set);
-        $this->assertInternalType('integer', $set[0], 'Unexpected type for prime number.');
-        $this->assertInternalType('integer', $set[1], 'Unexpected type for inverse number.');
-        $this->assertInternalType('integer', $set[2], 'Unexpected type for Xor.');
+        $this->assertIsInt($set[0], 'Unexpected type for prime number.');
+        $this->assertIsInt($set[1], 'Unexpected type for inverse number.');
+        $this->assertIsInt($set[2], 'Unexpected type for Xor.');
         $this->assertEquals($prime, $set[0], 'Unexpected prime number.');
         $this->assertEquals($expectedInverse, $set[1], 'Unexpected inverse number.');
     }
