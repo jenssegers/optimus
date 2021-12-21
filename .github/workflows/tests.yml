@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.4, 8.0]
+        php: [7.4, 8.0, 8.1]
         composer-flag: [prefer-lowest, prefer-stable]
 
     name: php v${{ matrix.php }} - ${{ matrix.composer-flag }}
@@ -31,8 +31,11 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.composer-flag }} --no-interaction --no-progress
 
-      - name: Execute tests
+      - name: Execute tests and submit coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p build/logs
           composer test -- --coverage-clover build/logs/clover.xml
-          [ -f build/logs/clover.xml ] && ./vendor/bin/php-coveralls -v || echo 'clover.xml not found.'
+          composer require --dev -n "php-coveralls/php-coveralls":"^2.5.2"
+          ./vendor/bin/php-coveralls -v 

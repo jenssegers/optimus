@@ -23,11 +23,9 @@ If you will be running your code on a 32 bit system or will be working with larg
 For debian/ubuntu you can install the extension with one of these commands:
 
 ```bash
-apt-get install php7.0-gmp
-apt-get install php7.1-gmp
-apt-get install php7.2-gmp
-apt-get install php7.3-gmp
 apt-get install php7.4-gmp
+apt-get install php8.0-gmp
+apt-get install php8.1-gmp
 ```
 
 ## Usage
