@@ -51,7 +51,7 @@ class Optimus
         $this->prime = $prime;
         $this->inverse = $inverse;
         $this->xor = $xor;
-        $this->max = 2 ** $size - 1;
+        $this->max = (($size < (PHP_INT_SIZE << 3)) ? 1 << $size : 2 ** $size) - 1;
 
         // Switch to GMP if 32 bit system, or working with larger primes.
         if (PHP_INT_SIZE === 4 || $size > 31) {
