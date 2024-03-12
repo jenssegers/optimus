@@ -13,7 +13,7 @@
     "require": {
         "php": "^7.4||^8.0",
         "phpseclib/phpseclib": "^3.0",
-        "symfony/console": "^5.0||^6.0"
+        "symfony/console": "^5.0||^6.0||^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.10"
