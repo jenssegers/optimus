@@ -65,7 +65,7 @@ class Optimus
             return (gmp_intval(gmp_mul($value, $this->prime)) & $this->max) ^ $this->xor;
         }
 
-        return (($value * $this->prime) & $this->max) ^ $this->xor;
+        return ((int) ($value * $this->prime) & $this->max) ^ $this->xor;
     }
 
     public function decode(int $value): int
@@ -74,7 +74,7 @@ class Optimus
             return gmp_intval(gmp_mul($value ^ $this->xor, $this->inverse)) & $this->max;
         }
 
-        return (($value ^ $this->xor) * $this->inverse) & $this->max;
+        return (int) (($value ^ $this->xor) * $this->inverse) & $this->max;
     }
 
     public function setMode(string $mode)
