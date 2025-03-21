@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SparkCommand extends Command
 {
-    protected function configure()
+    protected function configure(): int
     {
         $this
             ->setName('spark')
@@ -35,9 +35,11 @@ class SparkCommand extends Command
                 InputArgument::OPTIONAL,
                 'Your prime number'
             );
+
+        return 1; // method requires an integer return value
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $bitLength = $input->getOption('bits');
 
