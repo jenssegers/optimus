@@ -6,13 +6,14 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
+
     timeout-minutes: 15
+
     strategy:
       fail-fast: false
       matrix:
-        php: [7.4, 8.0, 8.1, 8.2]
+        php: [7.4, 8.0, 8.1, 8.2, '8.3', '8.4', '8.5']
         composer-flag: [prefer-lowest, prefer-stable]
 
     name: php v${{ matrix.php }} - ${{ matrix.composer-flag }}
@@ -38,4 +39,4 @@ jobs:
           mkdir -p build/logs
           composer test -- --coverage-clover build/logs/clover.xml
           composer require --dev -n "php-coveralls/php-coveralls":"^2.5.2"
-          ./vendor/bin/php-coveralls -v 
+          ./vendor/bin/php-coveralls -v
